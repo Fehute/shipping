@@ -5,11 +5,14 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', "text!game/templates/Crate.tmpl.html"], function(require, exports, common) {
+define(["require", "exports", 'common', 'knockout', "text!game/templates/Crate.tmpl.html"], function(require, exports, common, ko) {
     var Crate = (function (_super) {
         __extends(Crate, _super);
         function Crate(container) {
-            _super.call(this, container, Templates.crate);
+            this.crateLabel = ko.observable("SuperCrate");
+            this.crate = $(Templates.crate);
+            _super.call(this, container, this.crate);
+            ko.applyBindings(this, this.crate[0]);
         }
         return Crate;
     })(common.BaseRepeatingModule);

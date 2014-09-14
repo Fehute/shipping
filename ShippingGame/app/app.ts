@@ -8,7 +8,7 @@
 import game = require("game/Game");
 import ko = require('knockout');
 
-class Greeter {
+class App {
     element: HTMLElement;
     game: game.Game;
 
@@ -23,7 +23,7 @@ class Greeter {
 
 //ko["amdTemplateEngine"]["defaultPath"] = 'game/templates';
 var el = $('#content')[0];
-var greeter = new Greeter(el);
+var greeter = new App(el);
 
 
 //todo here:
@@ -32,3 +32,8 @@ var greeter = new Greeter(el);
 //desktop/mobile handling
 //input
 
+
+//Game has Board
+//Board has field and UI
+//Field has stacks
+//Stacks have crates
