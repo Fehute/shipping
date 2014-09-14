@@ -15,16 +15,15 @@ class Greeter {
     constructor(element: HTMLElement) {
         this.element = element;
         this.game = new game.Game($('.gameContainer'));
-        ko.applyBindings(this, this.element);
+        //ko.applyBindings(this, this.element);
     }
 
 }
 
+
 //ko["amdTemplateEngine"]["defaultPath"] = 'game/templates';
 var el = $('#content')[0];
 var greeter = new Greeter(el);
-
-
 
 
 //todo here:

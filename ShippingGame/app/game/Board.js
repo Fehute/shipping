@@ -5,11 +5,12 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', "text!game/templates/Board.tmpl.html"], function(require, exports, common) {
+define(["require", "exports", 'common', 'game/Field', "text!game/templates/Board.tmpl.html"], function(require, exports, common, field) {
     var Board = (function (_super) {
         __extends(Board, _super);
         function Board(container) {
             _super.call(this, container, Templates.board);
+            this.field = new field.Field($('.fieldContainer'));
         }
         return Board;
     })(common.BaseModule);

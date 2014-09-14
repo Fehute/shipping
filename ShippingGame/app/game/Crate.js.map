@@ -1,1 +1,1 @@
-{"version":3,"file":"Crate.js","sourceRoot":"","sources":["Crate.ts"],"names":[],"mappings":""}
+{"version":3,"file":"Crate.js","sourceRoot":"","sources":["Crate.ts"],"names":["Crate","Crate.constructor","Templates"],"mappings":"AAAA,gEAAgE;;;;;;;AAAhE;IAIA;QAA2BA,wBAA0BA;QACjDA,eAAYA,SAAiBA;YACzBC,WAAMA,OAAAA,SAASA,EAAEA,SAASA,CAACA,KAAKA,CAACA;QACrCA,CAACA;QACLD,aAACA;IAADA,CAACA,EAJ0B,MAAM,CAAC,mBAAmB,EAIpD;IAJD,sBAIC;;IAED,IAAO,SAAS;AAEf,KAFD,UAAO,SAAS;QACLE,UAAIA,KAAKA,GAAWA,OAAOA,CAACA,qCAAqCA,CAACA;IAC7EA,CAACA,iCAAA;GAAC"}

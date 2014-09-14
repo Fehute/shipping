@@ -1,10 +1,10 @@
 ﻿//https://github.com/borisyankov/DefinitelyTyped
-define(["require", "exports", "game/Game", 'knockout'], function(require, exports, game, ko) {
+define(["require", "exports", "game/Game"], function(require, exports, game) {
     var Greeter = (function () {
         function Greeter(element) {
             this.element = element;
             this.game = new game.Game($('.gameContainer'));
-            ko.applyBindings(this, this.element);
+            //ko.applyBindings(this, this.element);
         }
         return Greeter;
     })();
