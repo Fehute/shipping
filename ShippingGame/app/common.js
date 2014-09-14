@@ -12,16 +12,26 @@
 
     var BaseModule = (function () {
         function BaseModule(container, template) {
-            exports.applyTemplate(container, this, template);
+            this.container = container;
+            this.template = template;
+            this.render();
         }
+        BaseModule.prototype.render = function () {
+            exports.applyTemplate(this.container, this, this.template);
+        };
         return BaseModule;
     })();
     exports.BaseModule = BaseModule;
 
     var BaseRepeatingModule = (function () {
         function BaseRepeatingModule(container, template) {
-            exports.applyTemplate(container, this, template, false);
+            this.container = container;
+            this.template = template;
+            this.render();
         }
+        BaseRepeatingModule.prototype.render = function () {
+            exports.applyTemplate(this.container, this, this.template, false);
+        };
         return BaseRepeatingModule;
     })();
     exports.BaseRepeatingModule = BaseRepeatingModule;

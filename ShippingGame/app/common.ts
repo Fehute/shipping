@@ -16,16 +16,24 @@ export function applyTemplate(target: any, data: any, template: string, bind: bo
 }
 
 export class BaseModule {
-    constructor(container:JQuery, template:string) {
-        applyTemplate(container, this, template);
+    constructor(public container: JQuery, public template:string) {
+        this.render();
+    }
+
+    render() {
+        applyTemplate(this.container, this, this.template);
     }
 }
 
 export class BaseRepeatingModule {
     constructor(container: JQuery, template: JQuery);
     constructor(container: JQuery, template: string);
-    constructor(container: JQuery, template: any) {
-        applyTemplate(container, this, template, false);
+    constructor(public container: JQuery, public template: any) {
+        this.render();
+    }
+
+    render() {
+        applyTemplate(this.container, this, this.template, false);
     }
 }
 
