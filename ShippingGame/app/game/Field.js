@@ -19,6 +19,9 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/tem
             }
             return stacks;
         };
+
+        Field.prototype.checkForMatch = function () {
+        };
         return Field;
     })(common.BaseModule);
     exports.Field = Field;

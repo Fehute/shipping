@@ -16,7 +16,10 @@ export function applyTemplate(target: any, data: any, template: string, bind: bo
 }
 
 export class BaseModule {
+    self;
+
     constructor(public container: JQuery, public template:string) {
+        this.self = this;
         this.render();
     }
 

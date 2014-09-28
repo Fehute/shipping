@@ -16,6 +16,44 @@ define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.
     })(common.BaseModule);
     exports.Game = Game;
 
+    var State = (function () {
+        function State() {
+        }
+        State.crate = null;
+        return State;
+    })();
+    exports.State = State;
+
+    var CrateType = (function () {
+        function CrateType(type) {
+            this.type = type;
+        }
+        CrateType.prototype.getStyle = function () {
+            return CrateType.styles[this.type];
+        };
+
+        CrateType.getRandomType = function () {
+            var types = [
+                CrateType.one,
+                CrateType.two,
+                CrateType.three,
+                CrateType.four,
+                CrateType.five
+            ];
+
+            return types[Math.floor(Math.random() * 5)];
+        };
+        CrateType.one = 0;
+        CrateType.two = 1;
+        CrateType.three = 2;
+        CrateType.four = 3;
+        CrateType.five = 4;
+
+        CrateType.styles = ["one", "two", "three", "four", "five"];
+        return CrateType;
+    })();
+    exports.CrateType = CrateType;
+
     var Templates;
     (function (Templates) {
         Templates.game = require('text!game/templates/Game.tmpl.html');

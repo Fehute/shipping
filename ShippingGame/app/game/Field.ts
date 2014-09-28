@@ -18,6 +18,10 @@ export class Field extends common.BaseModule {
         }
         return stacks;
     }
+
+    checkForMatch() {
+
+    }
 }
 
 module Templates {

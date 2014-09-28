@@ -14,6 +14,7 @@
         function BaseModule(container, template) {
             this.container = container;
             this.template = template;
+            this.self = this;
             this.render();
         }
         BaseModule.prototype.render = function () {
