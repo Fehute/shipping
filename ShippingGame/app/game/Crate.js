@@ -8,11 +8,11 @@ var __extends = this.__extends || function (d, b) {
 define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/templates/Crate.tmpl.html"], function(require, exports, common, ko, game) {
     var Crate = (function (_super) {
         __extends(Crate, _super);
-        function Crate(container, crateData) {
+        function Crate(container, crateData, prepend, notType) {
             this.crateLabel = ko.observable("");
             this.crate = $(Templates.crate);
-            this.initData(crateData);
-            _super.call(this, container, this.crate);
+            this.initData(crateData, notType);
+            _super.call(this, container, this.crate, prepend);
             ko.applyBindings(this, this.crate[0]);
         }
         Crate.prototype.remove = function () {
@@ -20,11 +20,20 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             return this;
         };
 
-        Crate.prototype.initData = function (data) {
+        Crate.prototype.matched = function () {
+            var _this = this;
+            //play animations and stuff
+            this.crate.addClass('matched');
+            setTimeout(function () {
+                return _this.remove();
+            }, common.Configuration.rematchDelay);
+        };
+
+        Crate.prototype.initData = function (data, notType) {
             if (data) {
                 this.type = data.type;
             } else {
-                this.type = new game.CrateType(game.CrateType.getRandomType());
+                this.type = new game.CrateType(game.CrateType.getRandomType(notType));
             }
 
             var styles = [

@@ -6,11 +6,18 @@ span {
 
 .stack {
   min-height: 600px;
+  width: 80px;
   display: inline-block;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
+
+.stackContainer {
+  display: inline-block; }
+
+.field {
+  text-align: center; }
 
 .crate {
   -webkit-user-select: none;
@@ -30,6 +37,8 @@ span {
     background-color: green; }
   .crate.five {
     background-color: purple; }
+  .crate.matched {
+    background-color: gray; }
 
 .ghosted {
   opacity: 0.5; }

@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game/Game', "text!game/templates/Stack.tmpl.html"], function(require, exports, common, ko, crate, input, game) {
+define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game/Game', 'game/Field', "text!game/templates/Stack.tmpl.html"], function(require, exports, common, ko, crate, input, game, field) {
     var Stack = (function (_super) {
         __extends(Stack, _super);
         function Stack(container) {
@@ -24,10 +24,22 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
                 return _this.release.apply(self, arguments);
             });
         }
+        Stack.prototype.spawnCrate = function () {
+            this.crates([new crate.Crate(this.crateContainer, null, true, this.getFirstCrateType())].concat(this.crates()));
+        };
+
+        Stack.prototype.getFirstCrateType = function (cratesToCheck) {
+            cratesToCheck = cratesToCheck || this.crates();
+            if (cratesToCheck.length) {
+                return cratesToCheck[0].type;
+            }
+            return null;
+        };
+
         Stack.prototype.generateStartingCrates = function () {
             var crates = [];
             for (var i = 0; i < common.Configuration.stackHeight; i++) {
-                crates.push(new crate.Crate(this.crateContainer));
+                crates.push(new crate.Crate(this.crateContainer, null, false, this.getFirstCrateType(crates.slice().reverse())));
             }
             return crates;
         };
@@ -41,11 +53,32 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
             if (game.State.crate) {
                 this.crates.push(new crate.Crate(this.crateContainer, game.State.crate));
                 game.State.crate = null;
+                field.Field.cratePlaced();
             }
         };
 
         Stack.prototype.popCrate = function () {
             return this.crates.pop().remove();
+        };
+
+        //field will tell us which crates in the stack to set as matched
+        Stack.prototype.matchCrates = function (indicies) {
+            var indexOf;
+            this.crates(this.crates().filter(function (val, i) {
+                indexOf = indicies.indexOf(i);
+                if (indexOf == null || indexOf == -1) {
+                    return true;
+                } else {
+                    val.matched();
+                    return false;
+                }
+            }));
+        };
+
+        Stack.prototype.getContents = function () {
+            return this.crates().map(function (val) {
+                return val.getData();
+            });
         };
         return Stack;
     })(common.BaseRepeatingModule);

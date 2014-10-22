@@ -32,16 +32,26 @@ define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.
             return CrateType.styles[this.type];
         };
 
-        CrateType.getRandomType = function () {
+        CrateType.prototype.is = function (t) {
+            return this.type == t;
+        };
+
+        CrateType.getRandomType = function (notType) {
             var types = [
                 CrateType.one,
                 CrateType.two,
                 CrateType.three,
                 CrateType.four,
                 CrateType.five
-            ];
+            ].filter(function (t) {
+                return !notType || !notType.is(t);
+            });
 
-            return types[Math.floor(Math.random() * 5)];
+            return types[Math.floor(Math.random() * types.length)];
+        };
+
+        CrateType.prototype.matches = function (c) {
+            return this.type == c.type;
         };
         CrateType.one = 0;
         CrateType.two = 1;
@@ -59,4 +69,9 @@ define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.
         Templates.game = require('text!game/templates/Game.tmpl.html');
     })(Templates || (Templates = {}));
 });
+/*
+* powers:
+* -extra delay before matching
+* -depth charge
+*/
 //# sourceMappingURL=Game.js.map

@@ -19,6 +19,9 @@ export class State {
 
 export interface CrateData {
     type: CrateType;
+    count?: number;
+    checked?: boolean;
+    matchNumber?: number;
 }
 
 export class CrateType {
@@ -34,16 +37,24 @@ export class CrateType {
         return CrateType.styles[this.type];
     }
 
-    static getRandomType(): number {
+    is(t: number) {
+        return this.type == t;
+    }
+
+    static getRandomType(notType?: CrateType): number {
         var types = [
             CrateType.one,
             CrateType.two,
             CrateType.three,
             CrateType.four,
             CrateType.five
-        ]
+        ].filter((t) => !notType || !notType.is(t));
 
-        return types[Math.floor(Math.random() * 5)];
+        return types[Math.floor(Math.random() * types.length)];
+    }
+
+    matches(c: CrateType): Boolean {
+        return this.type == c.type;
     }
 
     constructor(public type: number) { }
@@ -52,3 +63,9 @@ export class CrateType {
 module Templates {
     export var game = <string>require('text!game/templates/Game.tmpl.html');
 }
+
+/*
+ * powers:
+ * -extra delay before matching
+ * -depth charge
+ */
