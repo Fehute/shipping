@@ -68,4 +68,8 @@ module Templates {
  * powers:
  * -extra delay before matching
  * -depth charge
+ * 
+ * 
+ * todo:
+ * secret blind guardian level
  */

@@ -73,5 +73,9 @@ define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.
 * powers:
 * -extra delay before matching
 * -depth charge
+*
+*
+* todo:
+* secret blind guardian level
 */
 //# sourceMappingURL=Game.js.map
