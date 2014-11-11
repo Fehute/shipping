@@ -2,6 +2,7 @@
 
 import common = require('common');
 import board = require('game/Board');
+import ko = require('knockout');
 
 export class Game extends common.BaseModule {
     board: board.Board;
@@ -9,12 +10,21 @@ export class Game extends common.BaseModule {
     constructor(container:JQuery, args?:any) {
         super(container, Templates.game);
         this.board = new board.Board($('.boardContainer'));
+        State.score.subscribe((score) => {
+            if (score >= State.pointThreshhold) {
+                common.Configuration.increaseIntensity();
+                this.board.reset();
+            }
+        });
     }
 }
 
 export class State {
     static crate: CrateData = null;
-
+    static chainValue: number = common.Configuration.baseChainValue;
+    static score: KnockoutObservable<number> = ko.observable(0);
+    static intensity: KnockoutObservable<number> = ko.observable(1);
+    static pointThreshhold: number = common.Configuration.basePointThreshhold;
 }
 
 export interface CrateData {

@@ -38,14 +38,24 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
 
         Stack.prototype.generateStartingCrates = function () {
             var crates = [];
-            for (var i = 0; i < common.Configuration.stackHeight; i++) {
+            for (var i = 0; i < common.Configuration.getStackHeight(); i++) {
                 crates.push(new crate.Crate(this.crateContainer, null, false, this.getFirstCrateType(crates.slice().reverse())));
             }
             return crates;
         };
 
+        Stack.prototype.resetTo = function (numCrates) {
+            numCrates = numCrates || common.Configuration.getStackHeight();
+
+            this.crates().forEach(function (c) {
+                return c.remove();
+            });
+            this.crates(this.generateStartingCrates());
+        };
+
         Stack.prototype.grab = function () {
             var crate = this.popCrate();
+            game.State.chainValue = common.Configuration.baseChainValue;
             game.State.crate = crate.getData();
         };
 

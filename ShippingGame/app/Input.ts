@@ -49,11 +49,10 @@ export function release(el: HTMLElement, callback: (e: any) => void);
 export function release(el: any, callback: (e: any) => void) {
     var clickRelease = function (e) {
         if (game.State.crate && !e.isDefaultPrevented()) {
-            console.log("click release");
             callback(e);
         }
     }
-    $(el).on("click", clickRelease);
+    $(el).on("mouseup", clickRelease);
     $(el).on("dragenter", (e) => {
     });
     $(el).on("dragover", (e) => {

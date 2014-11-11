@@ -23,6 +23,7 @@
     <Content Include="app\game\templates\Field.tmpl.html" />
     <Content Include="app\game\templates\Game.tmpl.html" />
     <Content Include="app\game\templates\Stack.tmpl.html" />
+    <Content Include="app\game\templates\Status.tmpl.html" />
     <Content Include="app\lib\jquery-1.11.1.min.js" />
     <Content Include="app\lib\jquery.gridster.min.js" />
     <Content Include="app\lib\knockout-amd-helpers.min.js" />

@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/templates/Field.tmpl.html"], function(require, exports, common, stack, ko) {
+define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "text!game/templates/Field.tmpl.html"], function(require, exports, common, stack, ko, game) {
     var Field = (function (_super) {
         __extends(Field, _super);
         function Field(container) {
@@ -26,7 +26,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/tem
             var self = this;
             this.spawner = setInterval(function () {
                 return _this.spawnCrates.apply(self, arguments);
-            }, common.Configuration.spawnInterval);
+            }, common.Configuration.getSpawnInterval());
             this.checkForMatch();
         };
 
@@ -43,6 +43,14 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/tem
                 stacks.push(new stack.Stack($('.stackContainer')));
             }
             return stacks;
+        };
+
+        Field.prototype.reset = function () {
+            window.clearInterval(this.spawner);
+            this.stacks().forEach(function (stack) {
+                return stack.resetTo(common.Configuration.getStackHeight());
+            });
+            this.start();
         };
 
         Field.prototype.checkForMatch = function () {
@@ -70,7 +78,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/tem
                         crate.checked = true;
                         type = crate.type;
                         count = 1;
-                        crate.matchNumber = matchNumber++; //unique, true-like match number
+                        crate.matchNumber = ++matchNumber; //unique, true-like match number
 
                         var compareCrates = function (x, y, crate) {
                             var crate2;
@@ -122,6 +130,33 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', "text!game/tem
             this.stacks().forEach(function (stack, i) {
                 return stack.matchCrates(matchResults[i]);
             });
+
+            /*
+            * field is CrateData[][]
+            * Start by combining into one array
+            * Filter by matched elements
+            * Reduce to the highest count per matchId
+            */
+            var crates = field.reduce(function (p, c) {
+                return p.concat(c);
+            }, []);
+            crates = crates.filter(function (c) {
+                return c.count >= common.Configuration.matchAmount;
+            });
+            crates = crates.reduce(function (p, c) {
+                if (!p.some(function (o) {
+                    return o.matchNumber == c.matchNumber;
+                })) {
+                    return p.concat(c);
+                }
+                return p;
+            }, []).filter(function (c) {
+                return c != null;
+            });
+            var score = common.Configuration.getPoints(crates.map(function (c) {
+                return c;
+            }));
+            game.State.score(game.State.score() + score);
 
             var checkAgain = 0;
             matchResults.forEach(function (stack) {

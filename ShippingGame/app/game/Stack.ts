@@ -38,14 +38,22 @@ export class Stack extends common.BaseRepeatingModule {
 
     generateStartingCrates(): crate.Crate[] {
         var crates = [];
-        for (var i = 0; i < common.Configuration.stackHeight; i++) {
+        for (var i = 0; i < common.Configuration.getStackHeight(); i++) {
             crates.push(new crate.Crate(this.crateContainer, null, false, this.getFirstCrateType(crates.slice().reverse())));
         }
         return crates;
     }
 
+    resetTo(numCrates: number) {
+        numCrates = numCrates || common.Configuration.getStackHeight();
+
+        this.crates().forEach((c) => c.remove());
+        this.crates(this.generateStartingCrates());
+    }
+
     grab() {
         var crate = this.popCrate();
+        game.State.chainValue = common.Configuration.baseChainValue;
         game.State.crate = crate.getData();
     }
 

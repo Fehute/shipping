@@ -1,9 +1,6 @@
 ﻿body {
   font-family: 'Segoe UI', sans-serif; }
 
-span {
-  font-style: italic; }
-
 .stack {
   min-height: 600px;
   width: 80px;
@@ -13,11 +10,32 @@ span {
   -ms-user-select: none;
   user-select: none; }
 
+.board {
+  text-align: center; }
+
 .stackContainer {
+  display: inline-block; }
+
+.fieldContainer {
   display: inline-block; }
 
 .field {
   text-align: center; }
+
+.statusContainer {
+  display: inline-block;
+  float: left;
+  position: absolute;
+  padding: 4px 10px 10px 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc; }
+
+.status {
+  text-align: left; }
+  .status .title {
+    font-weight: bold; }
+  .status .value {
+    font-weight: bold; }
 
 .crate {
   -webkit-user-select: none;

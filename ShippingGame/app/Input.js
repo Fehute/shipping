@@ -41,11 +41,10 @@ define(["require", "exports", 'game/Game'], function(require, exports, game) {
     function release(el, callback) {
         var clickRelease = function (e) {
             if (game.State.crate && !e.isDefaultPrevented()) {
-                console.log("click release");
                 callback(e);
             }
         };
-        $(el).on("click", clickRelease);
+        $(el).on("mouseup", clickRelease);
         $(el).on("dragenter", function (e) {
         });
         $(el).on("dragover", function (e) {

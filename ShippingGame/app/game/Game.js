@@ -5,12 +5,19 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board) {
+define(["require", "exports", 'common', 'game/Board', 'knockout', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board, ko) {
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game(container, args) {
+            var _this = this;
             _super.call(this, container, Templates.game);
             this.board = new board.Board($('.boardContainer'));
+            State.score.subscribe(function (score) {
+                if (score >= State.pointThreshhold) {
+                    common.Configuration.increaseIntensity();
+                    _this.board.reset();
+                }
+            });
         }
         return Game;
     })(common.BaseModule);
@@ -20,6 +27,10 @@ define(["require", "exports", 'common', 'game/Board', "text!game/templates/Game.
         function State() {
         }
         State.crate = null;
+        State.chainValue = common.Configuration.baseChainValue;
+        State.score = ko.observable(0);
+        State.intensity = ko.observable(1);
+        State.pointThreshhold = common.Configuration.basePointThreshhold;
         return State;
     })();
     exports.State = State;

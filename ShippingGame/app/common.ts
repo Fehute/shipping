@@ -1,5 +1,6 @@
 ﻿
 import ko = require('knockout');
+import game = require('game/Game') ;
 
 /*
  * modules will be given their root element.
@@ -46,11 +47,46 @@ export class BaseRepeatingModule {
 }
 
 export class Configuration {
+    static basePointThreshhold: number = 100;
     static numStacks: number = 5;
     static stackHeight: number = 8;
     static matchAmount: number = 4;
     static rematchDelay: number = 500; // animation delay for subsequent match checking on matches
     static startDelay: number = 1000;
     static spawnInterval: number = 3000;
+    static baseChainValue: number = 0.5;
+    static chainIncValue = (): number => 0.5;
+    static getPoints = (matches: Match[]): number => {
+        var crateValue = 1;
+        game.State.chainValue += Configuration.chainIncValue();
+        var chainValue = game.State.chainValue;
+        var points = 0;
+
+        matches.forEach((m) => {
+            points += (((m.count - Configuration.matchAmount + 1) * (m.count * crateValue)) * chainValue) * game.State.intensity();
+        });
+
+        return points;
+    };
+
+    static increaseIntensity = () => {
+        game.State.intensity(game.State.intensity()+1);
+        game.State.pointThreshhold += game.State.intensity() * Configuration.basePointThreshhold;
+    }
+
+    static getStackHeight = () => {
+        return Configuration.stackHeight + Math.ceil(game.State.intensity()/2);
+    }
+    static getSpawnInterval = () => {
+        var time = Configuration.spawnInterval - (Configuration.spawnInterval * (game.State.intensity() / 20));
+        if (time < 1500) return 1500;
+        return time;
+    }
 }
+
+export interface Match {
+    type: game.CrateType;
+    count: number;
+}
+
 

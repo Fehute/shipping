@@ -21,7 +21,7 @@ export class Field extends common.BaseModule {
 
     start() {
         var self = this;
-        this.spawner = setInterval(() => this.spawnCrates.apply(self, arguments), common.Configuration.spawnInterval);
+        this.spawner = setInterval(() => this.spawnCrates.apply(self, arguments), common.Configuration.getSpawnInterval());
         this.checkForMatch();
     }
 
@@ -36,6 +36,12 @@ export class Field extends common.BaseModule {
             stacks.push(new stack.Stack($('.stackContainer')));
         }
         return stacks;
+    }
+
+    reset() {
+        window.clearInterval(this.spawner);
+        this.stacks().forEach((stack) => stack.resetTo(common.Configuration.getStackHeight()));
+        this.start();
     }
 
     checkForMatch() {
@@ -62,9 +68,9 @@ export class Field extends common.BaseModule {
                     crate.checked = true;
                     type = crate.type;
                     count = 1;
-                    crate.matchNumber = matchNumber++; //unique, true-like match number
+                    crate.matchNumber = ++matchNumber; //unique, true-like match number
 
-                    var compareCrates = (x, y, crate): game.CrateData[]=> {
+                    var compareCrates = (x, y, crate): game.CrateData[] => {
                         var crate2: game.CrateData;
                         if ((x >= 0 && x < field.length) && (y >= 0 && y < field[x].length)) {
                             crate2 = field[x][y];
@@ -98,10 +104,28 @@ export class Field extends common.BaseModule {
             }
         }
 
+        
+
         //turn the field into sets of crate indicies that were successfully matched
-        var matchResults: number[][] = field.map((stack) => stack.map((c, i) => c.count >= common.Configuration.matchAmount ? i : -1).filter((val) => val!=-1));
+        var matchResults: number[][] = field.map((stack) => stack.map((c, i) => c.count >= common.Configuration.matchAmount ? i : -1).filter((val) => val != -1));
+
         //now tell each stack
         this.stacks().forEach((stack, i) => stack.matchCrates(matchResults[i]));
+
+
+        /*
+         * field is CrateData[][]
+         * Start by combining into one array
+         * Filter by matched elements
+         * Reduce to the highest count per matchId
+         */
+        var crates = field.reduce((p: game.CrateData[], c: game.CrateData[]) => { return p.concat(c) }, []);
+        crates = crates.filter((c) => c.count >= common.Configuration.matchAmount);
+        crates = crates.reduce((p: game.CrateData[], c: game.CrateData) => { if (!p.some((o) => o.matchNumber == c.matchNumber)) { return p.concat(c) } return p }, []).filter((c) => c != null);
+        var score = common.Configuration.getPoints(crates.map((c): common.Match => c));
+        game.State.score(game.State.score() + score);
+
+
 
         var checkAgain = 0;
         matchResults.forEach((stack) => checkAgain += stack.length);
