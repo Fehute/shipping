@@ -9,37 +9,32 @@
 
 import game = require('game/Game');
 
-enum ReleaseMode {
-    up,
-    click
+enum InputMode {
+    DnD,
+    Click
 }
 
-var releaseCondition: ReleaseMode = ReleaseMode.up;
+var inputMode = InputMode.DnD;
 
 export function grab(el: JQuery, callback: (e: any) => void);
 export function grab(el: HTMLElement, callback: (e: any) => void);
 export function grab(el: any, callback: (e: any) => void) {
-    $(el).on("click", (e) => {
-        if (!game.State.crate) {
-            callback(e);
-            e.originalEvent.preventDefault();
-            e.originalEvent.stopPropagation();
-            return false;
-        }
-    });
-    $(el).on("dragstart", (e: JQueryEventObject) => {
-        if (!game.State.crate) {
-            if (e.originalEvent["dataTransfer"]) {
-                e.originalEvent["dataTransfer"].setDragImage($("#dragPreview")[0], 0, 0);
-                e.originalEvent["dataTransfer"].setData("text/plain", "crate");
+    if (inputMode == InputMode.DnD) {
+        $(el).on("mousedown", (e) => {
+            if (!game.State.crate) {
+                callback(e);
             }
-            callback(e);
-        } else {
-            return false;
-        }
-    });
-    $(el).on("dragend", (e: JQueryEventObject) => {
-    });
+        });
+    } else if (inputMode == InputMode.Click) {
+        $(el).on("click", (e) => {
+            if (!game.State.crate) {
+                e.originalEvent.preventDefault();
+                e.originalEvent.stopPropagation();
+                callback(e);
+                return false;
+            }
+        });
+    }
 }
 
 
@@ -52,16 +47,9 @@ export function release(el: any, callback: (e: any) => void) {
             callback(e);
         }
     }
-    $(el).on("mouseup", clickRelease);
-    $(el).on("dragenter", (e) => {
-    });
-    $(el).on("dragover", (e) => {
-        e.originalEvent.preventDefault();
-        return false;
-    });
-    $(el).on("drop", (e) => {
-        if (game.State.crate) {
-            callback(e);
-        }
-    });
+    if (inputMode == InputMode.DnD) {
+        $(el).on("mouseup", clickRelease);
+    } else if (inputMode == InputMode.Click) {
+        $(el).on("click", clickRelease);
+    }
 }

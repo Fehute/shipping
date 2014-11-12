@@ -1,5 +1,9 @@
 ﻿body {
-  font-family: 'Segoe UI', sans-serif; }
+  font-family: 'Segoe UI', sans-serif;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 .stack {
   min-height: 600px;
@@ -28,7 +32,11 @@
   position: absolute;
   padding: 4px 10px 10px 10px;
   margin-left: 10px;
-  border: 1px solid #ccc; }
+  border: 1px solid #ccc;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 .status {
   text-align: left; }

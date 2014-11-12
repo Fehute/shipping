@@ -16,15 +16,24 @@ export class Status extends common.BaseRepeatingModule {
         this.score = game.State.score;
         this.intensity = game.State.intensity;
         this.status = $(Templates.status);
-        this.startTime = new Date().getTime();
-        this.timeElapsed = ko.observable(new Date(0).toTimeString());
+
+        var d = new Date();
+        var offset = d.getTimezoneOffset();
+        this.startTime = d.getTime() - offset * 60000;
+        this.timeElapsed = ko.observable(this.getTime());
 
         super(container, this.status);
         ko.applyBindings(this, this.status[0]);
 
         setInterval(() => {
-            this.timeElapsed(new Date(new Date().getTime() - this.startTime).toTimeString());
+            this.timeElapsed(this.getTime());
         }, 1000);
+    }
+
+    getTime():string {
+        var d = new Date();
+        var offset = d.getTimezoneOffset();
+        return new Date(d.getTime() - this.startTime).toTimeString().split(" ")[0];
     }
 }
 

@@ -13,16 +13,24 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             this.score = game.State.score;
             this.intensity = game.State.intensity;
             this.status = $(Templates.status);
-            this.startTime = new Date().getTime();
-            this.timeElapsed = ko.observable(new Date(0).toTimeString());
+
+            var d = new Date();
+            var offset = d.getTimezoneOffset();
+            this.startTime = d.getTime() - offset * 60000;
+            this.timeElapsed = ko.observable(this.getTime());
 
             _super.call(this, container, this.status);
             ko.applyBindings(this, this.status[0]);
 
             setInterval(function () {
-                _this.timeElapsed(new Date(new Date().getTime() - _this.startTime).toTimeString());
+                _this.timeElapsed(_this.getTime());
             }, 1000);
         }
+        Status.prototype.getTime = function () {
+            var d = new Date();
+            var offset = d.getTimezoneOffset();
+            return new Date(d.getTime() - this.startTime).toTimeString().split(" ")[0];
+        };
         return Status;
     })(common.BaseRepeatingModule);
     exports.Status = Status;

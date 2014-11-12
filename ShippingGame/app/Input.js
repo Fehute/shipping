@@ -5,36 +5,31 @@ todo:
 it and convert all device input data to the form/stuff we care about
 */
 define(["require", "exports", 'game/Game'], function(require, exports, game) {
-    var ReleaseMode;
-    (function (ReleaseMode) {
-        ReleaseMode[ReleaseMode["up"] = 0] = "up";
-        ReleaseMode[ReleaseMode["click"] = 1] = "click";
-    })(ReleaseMode || (ReleaseMode = {}));
+    var InputMode;
+    (function (InputMode) {
+        InputMode[InputMode["DnD"] = 0] = "DnD";
+        InputMode[InputMode["Click"] = 1] = "Click";
+    })(InputMode || (InputMode = {}));
 
-    var releaseCondition = 0 /* up */;
+    var inputMode = 0 /* DnD */;
 
     function grab(el, callback) {
-        $(el).on("click", function (e) {
-            if (!game.State.crate) {
-                callback(e);
-                e.originalEvent.preventDefault();
-                e.originalEvent.stopPropagation();
-                return false;
-            }
-        });
-        $(el).on("dragstart", function (e) {
-            if (!game.State.crate) {
-                if (e.originalEvent["dataTransfer"]) {
-                    e.originalEvent["dataTransfer"].setDragImage($("#dragPreview")[0], 0, 0);
-                    e.originalEvent["dataTransfer"].setData("text/plain", "crate");
+        if (inputMode == 0 /* DnD */) {
+            $(el).on("mousedown", function (e) {
+                if (!game.State.crate) {
+                    callback(e);
                 }
-                callback(e);
-            } else {
-                return false;
-            }
-        });
-        $(el).on("dragend", function (e) {
-        });
+            });
+        } else if (inputMode == 1 /* Click */) {
+            $(el).on("click", function (e) {
+                if (!game.State.crate) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    callback(e);
+                    return false;
+                }
+            });
+        }
     }
     exports.grab = grab;
 
@@ -44,18 +39,11 @@ define(["require", "exports", 'game/Game'], function(require, exports, game) {
                 callback(e);
             }
         };
-        $(el).on("mouseup", clickRelease);
-        $(el).on("dragenter", function (e) {
-        });
-        $(el).on("dragover", function (e) {
-            e.originalEvent.preventDefault();
-            return false;
-        });
-        $(el).on("drop", function (e) {
-            if (game.State.crate) {
-                callback(e);
-            }
-        });
+        if (inputMode == 0 /* DnD */) {
+            $(el).on("mouseup", clickRelease);
+        } else if (inputMode == 1 /* Click */) {
+            $(el).on("click", clickRelease);
+        }
     }
     exports.release = release;
 });
