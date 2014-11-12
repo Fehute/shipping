@@ -43,7 +43,6 @@ export function grab(el: any, callback: (e: any) => void) {
 }
 
 
-
 export function release(el: JQuery, callback: (e: any) => void);
 export function release(el: HTMLElement, callback: (e: any) => void);
 export function release(el: any, callback: (e: any) => void) {
