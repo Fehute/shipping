@@ -3,19 +3,33 @@
 import common = require('common');
 import ko = require('knockout');
 import game = require('game/Game');
+import crate = require('game/Crate');
 
 export class Status extends common.BaseRepeatingModule {
     status: JQuery;
+    heldCratesContainer: JQuery;
+    heldCrates: crate.Crate[];
     score: KnockoutObservable<number>;
     timeElapsed: KnockoutObservable<string>;
     intensity: KnockoutObservable<number>;
     currentTime: Date;
     startTime: number;
+    pointThreshhold: KnockoutObservable<number>;
+    stackContents: KnockoutObservableArray<game.CrateData>;
+    timer;
+
 
     constructor(container: JQuery, crateData?: game.CrateData) {
         this.score = game.State.score;
         this.intensity = game.State.intensity;
         this.status = $(Templates.status);
+        this.pointThreshhold = game.State.pointThreshhold;
+        this.stackContents = game.State.crates;
+        this.heldCrates = [];
+        this.heldCratesContainer = this.status.find('.heldCrates');
+        var self = this;
+        var updateCrates = this.updateCrates;
+        game.State.crates.subscribe(() => updateCrates.apply(self, arguments));
 
         var d = new Date();
         var offset = d.getTimezoneOffset();
@@ -25,7 +39,7 @@ export class Status extends common.BaseRepeatingModule {
         super(container, this.status);
         ko.applyBindings(this, this.status[0]);
 
-        setInterval(() => {
+        this.timer = setInterval(() => {
             this.timeElapsed(this.getTime());
         }, 1000);
     }
@@ -34,6 +48,35 @@ export class Status extends common.BaseRepeatingModule {
         var d = new Date();
         var offset = d.getTimezoneOffset();
         return new Date(d.getTime() - this.startTime).toTimeString().split(" ")[0];
+    }
+
+    stopTimer() {
+        window.clearInterval(this.timer);
+        this.timer = "";
+    }
+
+    resetTimer() {
+        if (this.timer) this.stopTimer();
+        var d = new Date();
+        var offset = d.getTimezoneOffset();
+        this.startTime = d.getTime() - offset * 60000;
+        this.timeElapsed = ko.observable(this.getTime());
+
+        this.startTimer();
+    }
+
+    startTimer() {
+        if (this.timer) this.stopTimer();
+        this.timer = setInterval(() => {
+            this.timeElapsed(this.getTime());
+        }, 1000);
+    }
+
+    updateCrates(val: game.CrateData[]) {
+        this.heldCrates.forEach((c) => c.remove());
+        this.heldCrates = [];
+
+        val.forEach((cd) => this.heldCrates.push(new crate.Crate(this.heldCratesContainer, cd)));
     }
 }
 

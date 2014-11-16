@@ -30,7 +30,7 @@ export class Field extends common.BaseModule {
         this.checkForMatch();
     }
 
-    generateStartingStacks(): stack.Stack[]{
+    generateStartingStacks(): stack.Stack[] {
         var stacks = [];
         for (var i = 0; i < common.Configuration.numStacks; i++) {
             stacks.push(new stack.Stack($('.stackContainer')));
@@ -41,6 +41,14 @@ export class Field extends common.BaseModule {
     reset() {
         window.clearInterval(this.spawner);
         this.stacks().forEach((stack) => stack.resetTo(common.Configuration.getStackHeight()));
+        this.start();
+    }
+
+    pause() {
+        window.clearInterval(this.spawner);
+    }
+
+    resume() {
         this.start();
     }
 

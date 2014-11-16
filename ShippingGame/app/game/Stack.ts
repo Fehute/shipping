@@ -18,6 +18,7 @@ export class Stack extends common.BaseRepeatingModule {
         super(container, this.stack);
         ko.applyBindings(this, this.stack[0]);
         this.crates = ko.observableArray(this.generateStartingCrates());
+        this.crates.subscribe(this.checkForLoss);
 
         var self = this;
         input.grab(this.stack, () => this.grab.apply(self, arguments));
@@ -54,13 +55,12 @@ export class Stack extends common.BaseRepeatingModule {
     grab() {
         var crate = this.popCrate();
         game.State.chainValue = common.Configuration.baseChainValue;
-        game.State.crate = crate.getData();
+        game.State.crates.push(crate.getData());
     }
 
     release() {
-        if (game.State.crate) {
-            this.crates.push(new crate.Crate(this.crateContainer, game.State.crate));
-            game.State.crate = null;
+        if (game.State.crates().length) {
+            this.crates.push(new crate.Crate(this.crateContainer, game.State.crates.pop()));
             field.Field.cratePlaced();
         }
     }
@@ -87,6 +87,11 @@ export class Stack extends common.BaseRepeatingModule {
         return this.crates().map((val) => val.getData());
     }
 
+    checkForLoss(crates) {
+        if (crates.length > common.Configuration.maxStackSize) {
+            game.State.game.gameLost();
+        }
+    }
     
 }
 

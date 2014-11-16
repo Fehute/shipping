@@ -53,6 +53,14 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
             this.start();
         };
 
+        Field.prototype.pause = function () {
+            window.clearInterval(this.spawner);
+        };
+
+        Field.prototype.resume = function () {
+            this.start();
+        };
+
         Field.prototype.checkForMatch = function () {
             //request an array from each stack
             //make array of these arrays (now we have the grid)

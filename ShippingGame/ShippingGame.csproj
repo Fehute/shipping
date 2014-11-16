@@ -22,6 +22,8 @@
     <Content Include="app\game\templates\Crate.tmpl.html" />
     <Content Include="app\game\templates\Field.tmpl.html" />
     <Content Include="app\game\templates\Game.tmpl.html" />
+    <Content Include="app\game\templates\modals\GameOver.tmpl.html" />
+    <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
     <Content Include="app\game\templates\Stack.tmpl.html" />
     <Content Include="app\game\templates\Status.tmpl.html" />
     <Content Include="app\lib\jquery-1.11.1.min.js" />
@@ -48,6 +50,7 @@
     <TypeScriptCompile Include="app\game\Crate.ts" />
     <TypeScriptCompile Include="app\game\Field.ts" />
     <TypeScriptCompile Include="app\game\Game.ts" />
+    <TypeScriptCompile Include="app\game\Modals.ts" />
     <TypeScriptCompile Include="app\game\Stack.ts" />
     <TypeScriptCompile Include="app\game\Status.ts" />
     <TypeScriptCompile Include="app\Input.ts" />

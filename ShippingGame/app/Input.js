@@ -4,25 +4,38 @@ todo:
 * instead of directly sending the event data, create our own interface for
 it and convert all device input data to the form/stuff we care about
 */
-define(["require", "exports", 'game/Game'], function(require, exports, game) {
+define(["require", "exports", 'game/Game', 'common'], function(require, exports, game, common) {
     var InputMode;
     (function (InputMode) {
         InputMode[InputMode["DnD"] = 0] = "DnD";
         InputMode[InputMode["Click"] = 1] = "Click";
     })(InputMode || (InputMode = {}));
 
-    var inputMode = 0 /* DnD */;
+    var inputMode = 1 /* Click */;
 
     function grab(el, callback) {
         if (inputMode == 0 /* DnD */) {
             $(el).on("mousedown", function (e) {
-                if (!game.State.crate) {
+                if (!game.State.crates().length && e.which == 1) {
                     callback(e);
+                } else if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    callback(e);
+                    return false;
                 }
             });
         } else if (inputMode == 1 /* Click */) {
             $(el).on("click", function (e) {
-                if (!game.State.crate) {
+                if (!game.State.crates().length && e.which == 1) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    callback(e);
+                    return false;
+                }
+            });
+            $(el).on("mousedown", function (e) {
+                if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
                     e.originalEvent.preventDefault();
                     e.originalEvent.stopPropagation();
                     callback(e);
@@ -35,7 +48,7 @@ define(["require", "exports", 'game/Game'], function(require, exports, game) {
 
     function release(el, callback) {
         var clickRelease = function (e) {
-            if (game.State.crate && !e.isDefaultPrevented()) {
+            if (game.State.crates().length && !e.isDefaultPrevented() && e.which == 1) {
                 callback(e);
             }
         };

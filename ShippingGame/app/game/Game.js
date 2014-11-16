@@ -5,20 +5,53 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'game/Board', 'knockout', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board, ko) {
+define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board, ko, modals) {
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game(container, args) {
             var _this = this;
             _super.call(this, container, Templates.game);
+            this.lost = false;
+            State.game = this;
             this.board = new board.Board($('.boardContainer'));
+            this.modals = new modals.Modals($('.modalsContainer'));
             State.score.subscribe(function (score) {
-                if (score >= State.pointThreshhold) {
+                if (score >= State.pointThreshhold()) {
+                    _this.board.field.pause();
                     common.Configuration.increaseIntensity();
-                    _this.board.reset();
+
+                    var self = _this;
+                    var restart = _this.restart;
+                    _this.modals.nextLevel(function () {
+                        return restart.apply(self);
+                    });
                 }
             });
         }
+        Game.prototype.gameLost = function () {
+            var _this = this;
+            if (!this.lost) {
+                this.lost = true;
+                this.board.pause();
+
+                var self = this;
+                var restart = this.restart;
+                this.modals.gameLost(function () {
+                    State.score(0);
+                    State.chainValue = common.Configuration.baseChainValue;
+                    State.intensity(1);
+                    State.pointThreshhold(common.Configuration.basePointThreshhold);
+                    _this.board.status.resetTimer();
+                    State.crates([]);
+                    restart.apply(self);
+                });
+            }
+        };
+
+        Game.prototype.restart = function () {
+            this.lost = false;
+            this.board.reset();
+        };
         return Game;
     })(common.BaseModule);
     exports.Game = Game;
@@ -26,11 +59,11 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', "text!game/tem
     var State = (function () {
         function State() {
         }
-        State.crate = null;
+        State.crates = ko.observableArray(new Array());
         State.chainValue = common.Configuration.baseChainValue;
         State.score = ko.observable(0);
         State.intensity = ko.observable(1);
-        State.pointThreshhold = common.Configuration.basePointThreshhold;
+        State.pointThreshhold = ko.observable(common.Configuration.basePointThreshhold);
         return State;
     })();
     exports.State = State;

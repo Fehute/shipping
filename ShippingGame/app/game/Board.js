@@ -15,6 +15,12 @@ define(["require", "exports", 'common', 'game/Field', 'game/Status', "text!game/
         }
         Board.prototype.reset = function () {
             this.field.reset();
+            this.status.resetTimer();
+        };
+
+        Board.prototype.pause = function () {
+            this.field.pause();
+            this.status.stopTimer();
         };
         return Board;
     })(common.BaseModule);

@@ -15,6 +15,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
             _super.call(this, container, this.stack);
             ko.applyBindings(this, this.stack[0]);
             this.crates = ko.observableArray(this.generateStartingCrates());
+            this.crates.subscribe(this.checkForLoss);
 
             var self = this;
             input.grab(this.stack, function () {
@@ -56,13 +57,12 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
         Stack.prototype.grab = function () {
             var crate = this.popCrate();
             game.State.chainValue = common.Configuration.baseChainValue;
-            game.State.crate = crate.getData();
+            game.State.crates.push(crate.getData());
         };
 
         Stack.prototype.release = function () {
-            if (game.State.crate) {
-                this.crates.push(new crate.Crate(this.crateContainer, game.State.crate));
-                game.State.crate = null;
+            if (game.State.crates().length) {
+                this.crates.push(new crate.Crate(this.crateContainer, game.State.crates.pop()));
                 field.Field.cratePlaced();
             }
         };
@@ -89,6 +89,12 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
             return this.crates().map(function (val) {
                 return val.getData();
             });
+        };
+
+        Stack.prototype.checkForLoss = function (crates) {
+            if (crates.length > common.Configuration.maxStackSize) {
+                game.State.game.gameLost();
+            }
         };
         return Stack;
     })(common.BaseRepeatingModule);

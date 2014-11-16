@@ -46,13 +46,15 @@
     var Configuration = (function () {
         function Configuration() {
         }
-        Configuration.basePointThreshhold = 100;
+        Configuration.basePointThreshhold = 60;
         Configuration.numStacks = 5;
         Configuration.stackHeight = 8;
         Configuration.matchAmount = 4;
+        Configuration.maxHeldCrates = 3;
         Configuration.rematchDelay = 500;
         Configuration.startDelay = 1000;
-        Configuration.spawnInterval = 3000;
+        Configuration.spawnInterval = 3500;
+        Configuration.maxStackSize = 25;
         Configuration.baseChainValue = 0.5;
         Configuration.chainIncValue = function () {
             return 0.5;
@@ -72,14 +74,14 @@
 
         Configuration.increaseIntensity = function () {
             game.State.intensity(game.State.intensity() + 1);
-            game.State.pointThreshhold += game.State.intensity() * Configuration.basePointThreshhold;
+            game.State.pointThreshhold(game.State.pointThreshhold() + game.State.intensity() * Configuration.basePointThreshhold);
         };
 
         Configuration.getStackHeight = function () {
             return Configuration.stackHeight + Math.ceil(game.State.intensity() / 2);
         };
         Configuration.getSpawnInterval = function () {
-            var time = Configuration.spawnInterval - (Configuration.spawnInterval * (game.State.intensity() / 20));
+            var time = Configuration.spawnInterval - (game.State.intensity() * 100);
             if (time < 1500)
                 return 1500;
             return time;

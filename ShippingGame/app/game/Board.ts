@@ -7,7 +7,7 @@ import status = require('game/Status');
 export class Board extends common.BaseModule {
     field: field.Field;
     status: status.Status;
-    constructor (container: JQuery) {
+    constructor(container: JQuery) {
         super(container, Templates.board);
         this.field = new field.Field($('.fieldContainer'));
         this.status = new status.Status($('.statusContainer'));
@@ -15,6 +15,12 @@ export class Board extends common.BaseModule {
 
     reset() {
         this.field.reset();
+        this.status.resetTimer();
+    }
+
+    pause() {
+        this.field.pause();
+        this.status.stopTimer();
     }
 }
 

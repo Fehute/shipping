@@ -47,13 +47,15 @@ export class BaseRepeatingModule {
 }
 
 export class Configuration {
-    static basePointThreshhold: number = 100;
+    static basePointThreshhold: number = 60;
     static numStacks: number = 5;
     static stackHeight: number = 8;
     static matchAmount: number = 4;
+    static maxHeldCrates: number = 3;
     static rematchDelay: number = 500; // animation delay for subsequent match checking on matches
     static startDelay: number = 1000;
-    static spawnInterval: number = 3000;
+    static spawnInterval: number = 3500;
+    static maxStackSize: number = 25;
     static baseChainValue: number = 0.5;
     static chainIncValue = (): number => 0.5;
     static getPoints = (matches: Match[]): number => {
@@ -71,14 +73,14 @@ export class Configuration {
 
     static increaseIntensity = () => {
         game.State.intensity(game.State.intensity()+1);
-        game.State.pointThreshhold += game.State.intensity() * Configuration.basePointThreshhold;
+        game.State.pointThreshhold(game.State.pointThreshhold() + game.State.intensity() * Configuration.basePointThreshhold);
     }
 
     static getStackHeight = () => {
         return Configuration.stackHeight + Math.ceil(game.State.intensity()/2);
     }
     static getSpawnInterval = () => {
-        var time = Configuration.spawnInterval - (Configuration.spawnInterval * (game.State.intensity() / 20));
+        var time = Configuration.spawnInterval - (game.State.intensity() * 100);//(Configuration.spawnInterval * (game.State.intensity() / 20));
         if (time < 1500) return 1500;
         return time;
     }

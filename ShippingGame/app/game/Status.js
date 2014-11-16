@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/templates/Status.tmpl.html"], function(require, exports, common, ko, game) {
+define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "text!game/templates/Status.tmpl.html"], function(require, exports, common, ko, game, crate) {
     var Status = (function (_super) {
         __extends(Status, _super);
         function Status(container, crateData) {
@@ -13,6 +13,15 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             this.score = game.State.score;
             this.intensity = game.State.intensity;
             this.status = $(Templates.status);
+            this.pointThreshhold = game.State.pointThreshhold;
+            this.stackContents = game.State.crates;
+            this.heldCrates = [];
+            this.heldCratesContainer = this.status.find('.heldCrates');
+            var self = this;
+            var updateCrates = this.updateCrates;
+            game.State.crates.subscribe(function () {
+                return updateCrates.apply(self, arguments);
+            });
 
             var d = new Date();
             var offset = d.getTimezoneOffset();
@@ -22,7 +31,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             _super.call(this, container, this.status);
             ko.applyBindings(this, this.status[0]);
 
-            setInterval(function () {
+            this.timer = setInterval(function () {
                 _this.timeElapsed(_this.getTime());
             }, 1000);
         }
@@ -30,6 +39,43 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             var d = new Date();
             var offset = d.getTimezoneOffset();
             return new Date(d.getTime() - this.startTime).toTimeString().split(" ")[0];
+        };
+
+        Status.prototype.stopTimer = function () {
+            window.clearInterval(this.timer);
+            this.timer = "";
+        };
+
+        Status.prototype.resetTimer = function () {
+            if (this.timer)
+                this.stopTimer();
+            var d = new Date();
+            var offset = d.getTimezoneOffset();
+            this.startTime = d.getTime() - offset * 60000;
+            this.timeElapsed = ko.observable(this.getTime());
+
+            this.startTimer();
+        };
+
+        Status.prototype.startTimer = function () {
+            var _this = this;
+            if (this.timer)
+                this.stopTimer();
+            this.timer = setInterval(function () {
+                _this.timeElapsed(_this.getTime());
+            }, 1000);
+        };
+
+        Status.prototype.updateCrates = function (val) {
+            var _this = this;
+            this.heldCrates.forEach(function (c) {
+                return c.remove();
+            });
+            this.heldCrates = [];
+
+            val.forEach(function (cd) {
+                return _this.heldCrates.push(new crate.Crate(_this.heldCratesContainer, cd));
+            });
         };
         return Status;
     })(common.BaseRepeatingModule);

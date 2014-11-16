@@ -3,28 +3,63 @@
 import common = require('common');
 import board = require('game/Board');
 import ko = require('knockout');
+import modals = require('game/Modals');
+import status = require('game/Status');
 
 export class Game extends common.BaseModule {
     board: board.Board;
+    modals: modals.Modals;
+    lost: boolean = false;
 
-    constructor(container:JQuery, args?:any) {
+    constructor(container: JQuery, args?: any) {
         super(container, Templates.game);
+        State.game = this;
         this.board = new board.Board($('.boardContainer'));
+        this.modals = new modals.Modals($('.modalsContainer'));
         State.score.subscribe((score) => {
-            if (score >= State.pointThreshhold) {
+            if (score >= State.pointThreshhold()) {
+                this.board.field.pause();
                 common.Configuration.increaseIntensity();
-                this.board.reset();
+
+                var self = this;
+                var restart = this.restart;
+                this.modals.nextLevel(() => restart.apply(self));
             }
         });
+    }
+
+    gameLost() {
+        if (!this.lost) {
+            this.lost = true;
+            this.board.pause();
+
+            var self = this;
+            var restart = this.restart;
+            this.modals.gameLost(() => {
+                State.score(0);
+                State.chainValue = common.Configuration.baseChainValue;
+                State.intensity(1);
+                State.pointThreshhold(common.Configuration.basePointThreshhold);
+                this.board.status.resetTimer();
+                State.crates([]);
+                restart.apply(self);
+             });
+        }
+    }
+
+    restart() {
+        this.lost = false;
+        this.board.reset();
     }
 }
 
 export class State {
-    static crate: CrateData = null;
+    static game: Game;
+    static crates: KnockoutObservableArray<CrateData> = ko.observableArray(new Array<CrateData>());
     static chainValue: number = common.Configuration.baseChainValue;
     static score: KnockoutObservable<number> = ko.observable(0);
     static intensity: KnockoutObservable<number> = ko.observable(1);
-    static pointThreshhold: number = common.Configuration.basePointThreshhold;
+    static pointThreshhold: KnockoutObservable<number> = ko.observable(common.Configuration.basePointThreshhold);
 }
 
 export interface CrateData {

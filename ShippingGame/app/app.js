@@ -4,6 +4,9 @@ define(["require", "exports", "game/Game"], function(require, exports, game) {
         function App(element) {
             this.element = element;
             this.game = new game.Game($('.gameContainer'));
+            document.oncontextmenu = function () {
+                return false;
+            };
             //ko.applyBindings(this, this.element);
         }
         return App;

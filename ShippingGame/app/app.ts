@@ -15,6 +15,7 @@ class App {
     constructor(element: HTMLElement) {
         this.element = element;
         this.game = new game.Game($('.gameContainer'));
+        document.oncontextmenu = function () { return false; };
         //ko.applyBindings(this, this.element);
     }
 
