@@ -16,16 +16,34 @@ export class Game extends common.BaseModule {
         State.game = this;
         this.board = new board.Board($('.boardContainer'));
         this.modals = new modals.Modals($('.modalsContainer'));
+
+        var self = this;
+        var restart = this.restart;
+        var gameType = this.gameType;
+
         State.score.subscribe((score) => {
             if (score >= State.pointThreshhold()) {
                 this.board.field.pause();
+                State.crates([]);
                 common.Configuration.increaseIntensity();
-
-                var self = this;
-                var restart = this.restart;
+                
                 this.modals.nextLevel(() => restart.apply(self));
             }
         });
+
+        this.board.pause();
+        this.modals.gameType(() => gameType.apply(self, arguments));
+    }
+
+    gameType(mode: common.GameMode): void {
+        State.gameMode = mode;
+        if (mode == common.GameMode.Click) {
+            State.clickSpawnRate = common.Configuration.clickSpawnRate;
+            State.clickSpawnCount = common.Configuration.clickSpawnCount;
+        } else if (mode == common.GameMode.Timed) {
+
+        }
+        this.board.reset();
     }
 
     gameLost() {
@@ -60,6 +78,9 @@ export class State {
     static score: KnockoutObservable<number> = ko.observable(0);
     static intensity: KnockoutObservable<number> = ko.observable(1);
     static pointThreshhold: KnockoutObservable<number> = ko.observable(common.Configuration.basePointThreshhold);
+    static gameMode: common.GameMode;
+    static clickSpawnRate: number;
+    static clickSpawnCount: number;
 }
 
 export interface CrateData {

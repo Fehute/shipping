@@ -1,5 +1,6 @@
 ﻿///<amd-dependency path="text!game/templates/modals/GameOver.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/NextLevel.tmpl.html" />
+///<amd-dependency path="text!game/templates/modals/GameType.tmpl.html" />
 
 import common = require('common');
 import board = require('game/Board');
@@ -15,7 +16,7 @@ export class Modals {
         var modal = $(Templates.gameOver);
         this.modals.push(modal);
         this.container.append(modal);
-        this.container.find($('.closeModal')).click(() => {
+        this.container.find('.closeModal').click(() => {
             modal.remove();
             onClose();
         });
@@ -25,9 +26,23 @@ export class Modals {
         var modal = $(Templates.nextLevel);
         this.modals.push(modal);
         this.container.append(modal);
-        this.container.find($('.closeModal')).click(() => {
+        this.container.find('.closeModal').click(() => {
             modal.remove();
             onClose();
+        });
+    }
+
+    gameType(onSelect: (mode:common.GameMode) => void) {
+        var modal = $(Templates.gameType);
+        this.modals.push(modal);
+        this.container.append(modal);
+        this.container.find('.timeButton').click(() => {
+            modal.remove();
+            onSelect(common.GameMode.Timed);
+        });
+        this.container.find('.clickButton').click(() => {
+            modal.remove();
+            onSelect(common.GameMode.Click);
         });
     }
 } 
@@ -35,4 +50,5 @@ export class Modals {
 module Templates {
     export var gameOver = <string>require('text!game/templates/modals/GameOver.tmpl.html');
     export var nextLevel = <string>require('text!game/templates/modals/NextLevel.tmpl.html');
+    export var gameType = <string>require('text!game/templates/modals/GameType.tmpl.html');
 }

@@ -55,6 +55,8 @@
         Configuration.startDelay = 1000;
         Configuration.spawnInterval = 3500;
         Configuration.maxStackSize = 25;
+        Configuration.clickSpawnRate = 6;
+        Configuration.clickSpawnCount = 1;
         Configuration.baseChainValue = 0.5;
         Configuration.chainIncValue = function () {
             return 0.5;
@@ -75,6 +77,11 @@
         Configuration.increaseIntensity = function () {
             game.State.intensity(game.State.intensity() + 1);
             game.State.pointThreshhold(game.State.pointThreshhold() + game.State.intensity() * Configuration.basePointThreshhold);
+            game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor(game.State.intensity() / 4);
+            if (game.State.clickSpawnRate < 4) {
+                game.State.clickSpawnCount++;
+                game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
+            }
         };
 
         Configuration.getStackHeight = function () {
@@ -89,5 +96,11 @@
         return Configuration;
     })();
     exports.Configuration = Configuration;
+
+    (function (GameMode) {
+        GameMode[GameMode["Timed"] = 0] = "Timed";
+        GameMode[GameMode["Click"] = 1] = "Click";
+    })(exports.GameMode || (exports.GameMode = {}));
+    var GameMode = exports.GameMode;
 });
 //# sourceMappingURL=common.js.map

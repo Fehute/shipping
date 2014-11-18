@@ -8,21 +8,38 @@ import game = require('game/Game');
 export class Field extends common.BaseModule {
     stacks: KnockoutObservableArray<stack.Stack>;
     static cratePlaced: () => void;
+    static crateTouched: () => void;
     spawner: number;
+    numClicks = ko.observable(0);
 
     constructor(container: JQuery) {
         super(container, Templates.field);
         this.stacks = ko.observableArray(this.generateStartingStacks());
         Field.cratePlaced = () => this.checkForMatch.apply(this, arguments);
-
-        var self = this;
-        setTimeout(() => this.start.apply(self, arguments), common.Configuration.startDelay);
+        Field.crateTouched = () => this.crateTouched.apply(this, arguments);
     }
 
     start() {
-        var self = this;
-        this.spawner = setInterval(() => this.spawnCrates.apply(self, arguments), common.Configuration.getSpawnInterval());
-        this.checkForMatch();
+        if (!game.State.gameMode || game.State.gameMode == common.GameMode.Timed) {
+            var self = this;
+            this.spawner = setInterval(() => this.spawnCrates.apply(self, arguments), common.Configuration.getSpawnInterval());
+            this.checkForMatch();
+        } else if (game.State.gameMode == common.GameMode.Click) {
+            this.numClicks = ko.observable(0);
+            this.numClicks.subscribe((val) => {
+                if (val >= game.State.clickSpawnRate) {
+                    for (var i = 0; i < game.State.clickSpawnCount; i++) {
+                        this.spawnCrates();
+                    }
+                    this.numClicks(0);
+                }
+            });
+
+        }
+    }
+
+    crateTouched() {
+        this.numClicks(this.numClicks() + 1);
     }
 
     spawnCrates() {

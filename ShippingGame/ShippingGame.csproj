@@ -23,6 +23,7 @@
     <Content Include="app\game\templates\Field.tmpl.html" />
     <Content Include="app\game\templates\Game.tmpl.html" />
     <Content Include="app\game\templates\modals\GameOver.tmpl.html" />
+    <Content Include="app\game\templates\modals\GameType.tmpl.html" />
     <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
     <Content Include="app\game\templates\Stack.tmpl.html" />
     <Content Include="app\game\templates\Status.tmpl.html" />

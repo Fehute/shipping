@@ -56,6 +56,8 @@ export class Configuration {
     static startDelay: number = 1000;
     static spawnInterval: number = 3500;
     static maxStackSize: number = 25;
+    static clickSpawnRate: number = 6;
+    static clickSpawnCount: number = 1;
     static baseChainValue: number = 0.5;
     static chainIncValue = (): number => 0.5;
     static getPoints = (matches: Match[]): number => {
@@ -74,6 +76,11 @@ export class Configuration {
     static increaseIntensity = () => {
         game.State.intensity(game.State.intensity()+1);
         game.State.pointThreshhold(game.State.pointThreshhold() + game.State.intensity() * Configuration.basePointThreshhold);
+        game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor(game.State.intensity() / 4);
+        if (game.State.clickSpawnRate < 4) {
+            game.State.clickSpawnCount++;
+            game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
+        }
     }
 
     static getStackHeight = () => {
@@ -89,6 +96,11 @@ export class Configuration {
 export interface Match {
     type: game.CrateType;
     count: number;
+}
+
+export enum GameMode {
+    Timed,
+    Click
 }
 
 

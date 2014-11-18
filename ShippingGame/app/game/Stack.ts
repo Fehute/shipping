@@ -56,12 +56,14 @@ export class Stack extends common.BaseRepeatingModule {
         var crate = this.popCrate();
         game.State.chainValue = common.Configuration.baseChainValue;
         game.State.crates.push(crate.getData());
+        field.Field.crateTouched();
     }
 
     release() {
         if (game.State.crates().length) {
             this.crates.push(new crate.Crate(this.crateContainer, game.State.crates.pop()));
             field.Field.cratePlaced();
+            field.Field.crateTouched();
         }
     }
 

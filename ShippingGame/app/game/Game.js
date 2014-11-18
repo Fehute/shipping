@@ -15,19 +15,38 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             State.game = this;
             this.board = new board.Board($('.boardContainer'));
             this.modals = new modals.Modals($('.modalsContainer'));
+
+            var self = this;
+            var restart = this.restart;
+            var gameType = this.gameType;
+
             State.score.subscribe(function (score) {
                 if (score >= State.pointThreshhold()) {
                     _this.board.field.pause();
+                    State.crates([]);
                     common.Configuration.increaseIntensity();
 
-                    var self = _this;
-                    var restart = _this.restart;
                     _this.modals.nextLevel(function () {
                         return restart.apply(self);
                     });
                 }
             });
+
+            this.board.pause();
+            this.modals.gameType(function () {
+                return gameType.apply(self, arguments);
+            });
         }
+        Game.prototype.gameType = function (mode) {
+            State.gameMode = mode;
+            if (mode == 1 /* Click */) {
+                State.clickSpawnRate = common.Configuration.clickSpawnRate;
+                State.clickSpawnCount = common.Configuration.clickSpawnCount;
+            } else if (mode == 0 /* Timed */) {
+            }
+            this.board.reset();
+        };
+
         Game.prototype.gameLost = function () {
             var _this = this;
             if (!this.lost) {

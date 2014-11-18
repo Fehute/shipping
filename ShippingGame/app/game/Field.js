@@ -11,23 +11,38 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
         function Field(container) {
             var _this = this;
             _super.call(this, container, Templates.field);
+            this.numClicks = ko.observable(0);
             this.stacks = ko.observableArray(this.generateStartingStacks());
             Field.cratePlaced = function () {
                 return _this.checkForMatch.apply(_this, arguments);
             };
-
-            var self = this;
-            setTimeout(function () {
-                return _this.start.apply(self, arguments);
-            }, common.Configuration.startDelay);
+            Field.crateTouched = function () {
+                return _this.crateTouched.apply(_this, arguments);
+            };
         }
         Field.prototype.start = function () {
             var _this = this;
-            var self = this;
-            this.spawner = setInterval(function () {
-                return _this.spawnCrates.apply(self, arguments);
-            }, common.Configuration.getSpawnInterval());
-            this.checkForMatch();
+            if (!game.State.gameMode || game.State.gameMode == 0 /* Timed */) {
+                var self = this;
+                this.spawner = setInterval(function () {
+                    return _this.spawnCrates.apply(self, arguments);
+                }, common.Configuration.getSpawnInterval());
+                this.checkForMatch();
+            } else if (game.State.gameMode == 1 /* Click */) {
+                this.numClicks = ko.observable(0);
+                this.numClicks.subscribe(function (val) {
+                    if (val >= game.State.clickSpawnRate) {
+                        for (var i = 0; i < game.State.clickSpawnCount; i++) {
+                            _this.spawnCrates();
+                        }
+                        _this.numClicks(0);
+                    }
+                });
+            }
+        };
+
+        Field.prototype.crateTouched = function () {
+            this.numClicks(this.numClicks() + 1);
         };
 
         Field.prototype.spawnCrates = function () {

@@ -1,6 +1,7 @@
 ﻿///<amd-dependency path="text!game/templates/modals/GameOver.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/NextLevel.tmpl.html" />
-define(["require", "exports", "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html"], function(require, exports) {
+///<amd-dependency path="text!game/templates/modals/GameType.tmpl.html" />
+define(["require", "exports", 'common', "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html", "text!game/templates/modals/GameType.tmpl.html"], function(require, exports, common) {
     var Modals = (function () {
         function Modals(container) {
             this.container = container;
@@ -10,7 +11,7 @@ define(["require", "exports", "text!game/templates/modals/GameOver.tmpl.html", "
             var modal = $(Templates.gameOver);
             this.modals.push(modal);
             this.container.append(modal);
-            this.container.find($('.closeModal')).click(function () {
+            this.container.find('.closeModal').click(function () {
                 modal.remove();
                 onClose();
             });
@@ -20,9 +21,23 @@ define(["require", "exports", "text!game/templates/modals/GameOver.tmpl.html", "
             var modal = $(Templates.nextLevel);
             this.modals.push(modal);
             this.container.append(modal);
-            this.container.find($('.closeModal')).click(function () {
+            this.container.find('.closeModal').click(function () {
                 modal.remove();
                 onClose();
+            });
+        };
+
+        Modals.prototype.gameType = function (onSelect) {
+            var modal = $(Templates.gameType);
+            this.modals.push(modal);
+            this.container.append(modal);
+            this.container.find('.timeButton').click(function () {
+                modal.remove();
+                onSelect(0 /* Timed */);
+            });
+            this.container.find('.clickButton').click(function () {
+                modal.remove();
+                onSelect(1 /* Click */);
             });
         };
         return Modals;
@@ -33,6 +48,7 @@ define(["require", "exports", "text!game/templates/modals/GameOver.tmpl.html", "
     (function (Templates) {
         Templates.gameOver = require('text!game/templates/modals/GameOver.tmpl.html');
         Templates.nextLevel = require('text!game/templates/modals/NextLevel.tmpl.html');
+        Templates.gameType = require('text!game/templates/modals/GameType.tmpl.html');
     })(Templates || (Templates = {}));
 });
 //# sourceMappingURL=Modals.js.map
