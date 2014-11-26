@@ -25,8 +25,8 @@ export class Stack extends common.BaseRepeatingModule {
         input.release(this.stack, () => this.release.apply(self, arguments));
     }
 
-    spawnCrate() {
-        this.crates([new crate.Crate(this.crateContainer, null, true, this.getFirstCrateType())].concat(this.crates()));
+    spawnCrate(specialType: number = game.CrateType.none) {
+        this.crates([new crate.Crate(this.crateContainer, null, true, this.getFirstCrateType(), specialType)].concat(this.crates()));
     }
 
     getFirstCrateType(cratesToCheck?: crate.Crate[]): game.CrateType {
@@ -53,10 +53,12 @@ export class Stack extends common.BaseRepeatingModule {
     }
 
     grab() {
-        var crate = this.popCrate();
-        game.State.chainValue = common.Configuration.baseChainValue;
-        game.State.crates.push(crate.getData());
-        field.Field.crateTouched();
+        if (this.crates().length > 0 && this.crates.slice(-1)[0].type.special != game.CrateType.rock) {
+            var crate = this.popCrate();
+            game.State.chainValue = common.Configuration.baseChainValue;
+            game.State.crates.push(crate.getData());
+            field.Field.crateTouched();
+        }
     }
 
     release() {

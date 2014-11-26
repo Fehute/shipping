@@ -22,6 +22,11 @@ export class Board extends common.BaseModule {
         this.field.pause();
         this.status.stopTimer();
     }
+
+    resume() {
+        this.field.resume();
+        this.status.startTimer();
+    }
 }
 
 module Templates {

@@ -22,6 +22,11 @@ define(["require", "exports", 'common', 'game/Field', 'game/Status', "text!game/
             this.field.pause();
             this.status.stopTimer();
         };
+
+        Board.prototype.resume = function () {
+            this.field.resume();
+            this.status.startTimer();
+        };
         return Board;
     })(common.BaseModule);
     exports.Board = Board;

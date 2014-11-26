@@ -81,15 +81,34 @@ export class Configuration {
             game.State.clickSpawnCount++;
             game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
         }
+        game.State.totalSpawns = 0;
+        game.State.specialCrates.push(Configuration.getNewSpecialCrate());
+        game.State.cratePools = Configuration.getCratePools();
+    }
+
+    static getNewSpecialCrate(): number {
+        var types = game.CrateType.specialTypes.filter((t) => (game.State.specialCrates.indexOf(t) == -1));
+
+        return types[Math.floor(Math.random() * types.length)];
     }
 
     static getStackHeight = () => {
         return Configuration.stackHeight + Math.ceil(game.State.intensity()/2);
     }
+
     static getSpawnInterval = () => {
         var time = Configuration.spawnInterval - (game.State.intensity() * 100);//(Configuration.spawnInterval * (game.State.intensity() / 20));
         if (time < 1500) return 1500;
         return time;
+    }
+
+    static getCratePools = ():CratePool[] => {
+         return [{
+            countdown: 3,
+            baseCountdown: 3,
+            getVariance: () => (Math.random() * 2) % 1,
+            types: [game.CrateType.rock, game.CrateType.rainbow]
+        }];
     }
 }
 
@@ -103,4 +122,9 @@ export enum GameMode {
     Click
 }
 
-
+export interface CratePool {
+    countdown: number;
+    baseCountdown: number;
+    getVariance: () => number;
+    types: number[];
+}

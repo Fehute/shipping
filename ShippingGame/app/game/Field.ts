@@ -34,7 +34,7 @@ export class Field extends common.BaseModule {
                     this.numClicks(0);
                 }
             });
-
+            this.checkForMatch();
         }
     }
 
@@ -43,8 +43,33 @@ export class Field extends common.BaseModule {
     }
 
     spawnCrates() {
-        this.stacks().forEach((stack) => stack.spawnCrate());
+        game.State.totalSpawns++;
+        var specials = this.getSpecialSpawns();
+        this.stacks().forEach((stack, i) => stack.spawnCrate(specials[i]));
         this.checkForMatch();
+    }
+
+    getSpecialSpawns(): number[]{
+        var none = game.CrateType.none;
+        var availableTypes: number[];
+        var spawns = [];
+        for (var i = 0; i < common.Configuration.numStacks; i++) {
+            spawns.push(none);
+        }
+
+        game.State.cratePools.forEach((p) => {
+            p.countdown--;
+            if (p.countdown <= 0) {
+                p.countdown = p.baseCountdown - p.getVariance();
+                availableTypes = p.types.filter((t) => game.State.specialCrates.indexOf(t) != -1);
+                if (availableTypes.length > 0) {
+                    spawns[Math.floor(Math.random() * spawns.length)] = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+                }
+            }
+
+        });
+
+        return spawns;
     }
 
     generateStartingStacks(): stack.Stack[] {
@@ -88,7 +113,7 @@ export class Field extends common.BaseModule {
             for (var y = 0; y < field[x].length; y++) {
                 //travel down our stack
                 crate = field[x][y];
-                if (!crate.checked) { //new crate
+                if (!crate.checked && crate.type.special != game.CrateType.rainbow) { //new crate
                     //begin checking for a new set
                     crate.checked = true;
                     type = crate.type;
@@ -105,10 +130,10 @@ export class Field extends common.BaseModule {
                                 count++;
 
                                 var subMatch: game.CrateData[] = [crate2];
-                                subMatch = subMatch.concat(compareCrates(x + 1, y, crate2));
-                                subMatch = subMatch.concat(compareCrates(x, y + 1, crate2));
-                                subMatch = subMatch.concat(compareCrates(x - 1, y, crate2));
-                                subMatch = subMatch.concat(compareCrates(x, y - 1, crate2));
+                                subMatch = subMatch.concat(compareCrates(x + 1, y, crate));
+                                subMatch = subMatch.concat(compareCrates(x, y + 1, crate));
+                                subMatch = subMatch.concat(compareCrates(x - 1, y, crate));
+                                subMatch = subMatch.concat(compareCrates(x, y - 1, crate));
                                 return subMatch;
                             }
                         }

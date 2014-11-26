@@ -17,6 +17,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             this.stackContents = game.State.crates;
             this.heldCrates = [];
             this.heldCratesContainer = this.status.find('.heldCrates');
+            this.pauseLabel = ko.observable("Pause");
             var self = this;
             var updateCrates = this.updateCrates;
             game.State.crates.subscribe(function () {
@@ -43,7 +44,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
 
         Status.prototype.stopTimer = function () {
             window.clearInterval(this.timer);
-            this.timer = "";
+            this.timer = null;
         };
 
         Status.prototype.resetTimer = function () {
@@ -52,7 +53,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             var d = new Date();
             var offset = d.getTimezoneOffset();
             this.startTime = d.getTime() - offset * 60000;
-            this.timeElapsed = ko.observable(this.getTime());
+            this.timeElapsed(this.getTime());
 
             this.startTimer();
         };
@@ -76,6 +77,17 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             val.forEach(function (cd) {
                 return _this.heldCrates.push(new crate.Crate(_this.heldCratesContainer, cd));
             });
+        };
+
+        Status.prototype.pauseGame = function () {
+            if (!this.paused) {
+                game.State.game.board.pause();
+                this.pauseLabel("Unpause");
+            } else {
+                game.State.game.board.resume();
+                this.pauseLabel("Pause");
+            }
+            this.paused = !this.paused;
         };
         return Status;
     })(common.BaseRepeatingModule);

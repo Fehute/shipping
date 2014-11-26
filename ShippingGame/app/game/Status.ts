@@ -16,7 +16,9 @@ export class Status extends common.BaseRepeatingModule {
     startTime: number;
     pointThreshhold: KnockoutObservable<number>;
     stackContents: KnockoutObservableArray<game.CrateData>;
-    timer;
+    timer: number;
+    paused: boolean;
+    pauseLabel: KnockoutObservable<string>;
 
 
     constructor(container: JQuery, crateData?: game.CrateData) {
@@ -27,6 +29,7 @@ export class Status extends common.BaseRepeatingModule {
         this.stackContents = game.State.crates;
         this.heldCrates = [];
         this.heldCratesContainer = this.status.find('.heldCrates');
+        this.pauseLabel = ko.observable("Pause");
         var self = this;
         var updateCrates = this.updateCrates;
         game.State.crates.subscribe(() => updateCrates.apply(self, arguments));
@@ -52,7 +55,7 @@ export class Status extends common.BaseRepeatingModule {
 
     stopTimer() {
         window.clearInterval(this.timer);
-        this.timer = "";
+        this.timer = null;
     }
 
     resetTimer() {
@@ -60,7 +63,7 @@ export class Status extends common.BaseRepeatingModule {
         var d = new Date();
         var offset = d.getTimezoneOffset();
         this.startTime = d.getTime() - offset * 60000;
-        this.timeElapsed = ko.observable(this.getTime());
+        this.timeElapsed(this.getTime());
 
         this.startTimer();
     }
@@ -77,6 +80,17 @@ export class Status extends common.BaseRepeatingModule {
         this.heldCrates = [];
 
         val.forEach((cd) => this.heldCrates.push(new crate.Crate(this.heldCratesContainer, cd)));
+    }
+
+    pauseGame() {
+        if (!this.paused) {
+            game.State.game.board.pause();
+            this.pauseLabel("Unpause");
+        } else {
+            game.State.game.board.resume();
+            this.pauseLabel("Pause");
+        }
+        this.paused = !this.paused;
     }
 }
 

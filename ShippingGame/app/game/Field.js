@@ -38,6 +38,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                         _this.numClicks(0);
                     }
                 });
+                this.checkForMatch();
             }
         };
 
@@ -46,10 +47,36 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
         };
 
         Field.prototype.spawnCrates = function () {
-            this.stacks().forEach(function (stack) {
-                return stack.spawnCrate();
+            game.State.totalSpawns++;
+            var specials = this.getSpecialSpawns();
+            this.stacks().forEach(function (stack, i) {
+                return stack.spawnCrate(specials[i]);
             });
             this.checkForMatch();
+        };
+
+        Field.prototype.getSpecialSpawns = function () {
+            var none = game.CrateType.none;
+            var availableTypes;
+            var spawns = [];
+            for (var i = 0; i < common.Configuration.numStacks; i++) {
+                spawns.push(none);
+            }
+
+            game.State.cratePools.forEach(function (p) {
+                p.countdown--;
+                if (p.countdown <= 0) {
+                    p.countdown = p.baseCountdown - p.getVariance();
+                    availableTypes = p.types.filter(function (t) {
+                        return game.State.specialCrates.indexOf(t) != -1;
+                    });
+                    if (availableTypes.length > 0) {
+                        spawns[Math.floor(Math.random() * spawns.length)] = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+                    }
+                }
+            });
+
+            return spawns;
         };
 
         Field.prototype.generateStartingStacks = function () {
@@ -96,7 +123,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                 for (var y = 0; y < field[x].length; y++) {
                     //travel down our stack
                     crate = field[x][y];
-                    if (!crate.checked) {
+                    if (!crate.checked && crate.type.special != game.CrateType.rainbow) {
                         //begin checking for a new set
                         crate.checked = true;
                         type = crate.type;
@@ -113,10 +140,10 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                                     count++;
 
                                     var subMatch = [crate2];
-                                    subMatch = subMatch.concat(compareCrates(x + 1, y, crate2));
-                                    subMatch = subMatch.concat(compareCrates(x, y + 1, crate2));
-                                    subMatch = subMatch.concat(compareCrates(x - 1, y, crate2));
-                                    subMatch = subMatch.concat(compareCrates(x, y - 1, crate2));
+                                    subMatch = subMatch.concat(compareCrates(x + 1, y, crate));
+                                    subMatch = subMatch.concat(compareCrates(x, y + 1, crate));
+                                    subMatch = subMatch.concat(compareCrates(x - 1, y, crate));
+                                    subMatch = subMatch.concat(compareCrates(x, y - 1, crate));
                                     return subMatch;
                                 }
                             }

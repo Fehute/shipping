@@ -8,10 +8,11 @@ var __extends = this.__extends || function (d, b) {
 define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/templates/Crate.tmpl.html"], function(require, exports, common, ko, game) {
     var Crate = (function (_super) {
         __extends(Crate, _super);
-        function Crate(container, crateData, prepend, notType) {
+        function Crate(container, crateData, prepend, notType, specialType) {
+            if (typeof specialType === "undefined") { specialType = game.CrateType.none; }
             this.crateLabel = ko.observable("");
             this.crate = $(Templates.crate);
-            this.initData(crateData, notType);
+            this.initData(crateData, notType, specialType);
             _super.call(this, container, this.crate, prepend);
             ko.applyBindings(this, this.crate[0]);
         }
@@ -29,20 +30,14 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             }, common.Configuration.rematchDelay);
         };
 
-        Crate.prototype.initData = function (data, notType) {
+        Crate.prototype.initData = function (data, notType, special) {
+            if (typeof special === "undefined") { special = game.CrateType.none; }
             if (data) {
                 this.type = data.type;
             } else {
-                this.type = new game.CrateType(game.CrateType.getRandomType(notType));
+                this.type = new game.CrateType(game.CrateType.getRandomType(notType), special);
             }
 
-            var styles = [
-                game.CrateType.one,
-                game.CrateType.two,
-                game.CrateType.three,
-                game.CrateType.four,
-                game.CrateType.five
-            ];
             this.crateStyle = ko.observable(this.type.getStyle());
         };
 

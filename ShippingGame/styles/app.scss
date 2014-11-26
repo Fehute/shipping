@@ -92,9 +92,40 @@
         background-color: purple;
     }
 
+    &.rock {
+        background-color: black;
+    }
+
+    &.rainbow {
+        background-color: hotpink;
+    }
+
     &.matched {
         background-color: gray;
     }
+
+    &:after {
+        text-align: center;
+        color: #fff;
+    }
+
+    &.bonus:after {
+        content: "BONUS";
+    }
+
+    /*
+        "bonus",
+        "minus",
+        "charge",
+        "trasher",
+        "heavy",
+        "exploding",
+        "activeSpawn",
+        "matchSpawn",
+        "activePenalty",
+        "activeBonus",
+        "scramble"
+    */
 }
 
 .modalsContainer {
@@ -130,4 +161,8 @@
 
 .ghosted {
     opacity: 0.5;
+}
+
+.copyright {
+    text-align: center;
 }

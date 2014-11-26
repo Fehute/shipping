@@ -25,8 +25,9 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
                 return _this.release.apply(self, arguments);
             });
         }
-        Stack.prototype.spawnCrate = function () {
-            this.crates([new crate.Crate(this.crateContainer, null, true, this.getFirstCrateType())].concat(this.crates()));
+        Stack.prototype.spawnCrate = function (specialType) {
+            if (typeof specialType === "undefined") { specialType = game.CrateType.none; }
+            this.crates([new crate.Crate(this.crateContainer, null, true, this.getFirstCrateType(), specialType)].concat(this.crates()));
         };
 
         Stack.prototype.getFirstCrateType = function (cratesToCheck) {
@@ -55,10 +56,12 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
         };
 
         Stack.prototype.grab = function () {
-            var crate = this.popCrate();
-            game.State.chainValue = common.Configuration.baseChainValue;
-            game.State.crates.push(crate.getData());
-            field.Field.crateTouched();
+            if (this.crates().length > 0 && this.crates.slice(-1)[0].type.special != game.CrateType.rock) {
+                var crate = this.popCrate();
+                game.State.chainValue = common.Configuration.baseChainValue;
+                game.State.crates.push(crate.getData());
+                field.Field.crateTouched();
+            }
         };
 
         Stack.prototype.release = function () {

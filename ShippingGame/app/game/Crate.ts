@@ -10,10 +10,10 @@ export class Crate extends common.BaseRepeatingModule {
     type: game.CrateType;
     crateStyle;
 
-    constructor(container: JQuery, crateData?: game.CrateData, prepend?: boolean, notType?: game.CrateType) {
+    constructor(container: JQuery, crateData?: game.CrateData, prepend?: boolean, notType?: game.CrateType, specialType: number = game.CrateType.none) {
         this.crateLabel = ko.observable("");
         this.crate = $(Templates.crate);
-        this.initData(crateData, notType);
+        this.initData(crateData, notType, specialType);
         super(container, this.crate, prepend);
         ko.applyBindings(this, this.crate[0]);
     }
@@ -29,20 +29,13 @@ export class Crate extends common.BaseRepeatingModule {
         setTimeout(() => this.remove(), common.Configuration.rematchDelay);
     }
 
-    initData(data: game.CrateData, notType?: game.CrateType) {
+    initData(data: game.CrateData, notType?: game.CrateType, special: number = game.CrateType.none) {
         if (data) {
             this.type = data.type;
         } else {
-            this.type = new game.CrateType(game.CrateType.getRandomType(notType));
+            this.type = new game.CrateType(game.CrateType.getRandomType(notType), special);
         }
 
-        var styles = [
-            game.CrateType.one,
-            game.CrateType.two,
-            game.CrateType.three,
-            game.CrateType.four,
-            game.CrateType.five
-        ];
         this.crateStyle = ko.observable(this.type.getStyle());
     }
 

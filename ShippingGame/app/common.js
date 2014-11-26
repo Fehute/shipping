@@ -46,6 +46,13 @@
     var Configuration = (function () {
         function Configuration() {
         }
+        Configuration.getNewSpecialCrate = function () {
+            var types = game.CrateType.specialTypes.filter(function (t) {
+                return (game.State.specialCrates.indexOf(t) == -1);
+            });
+
+            return types[Math.floor(Math.random() * types.length)];
+        };
         Configuration.basePointThreshhold = 60;
         Configuration.numStacks = 5;
         Configuration.stackHeight = 8;
@@ -82,16 +89,31 @@
                 game.State.clickSpawnCount++;
                 game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
             }
+            game.State.totalSpawns = 0;
+            game.State.specialCrates.push(Configuration.getNewSpecialCrate());
+            game.State.cratePools = Configuration.getCratePools();
         };
 
         Configuration.getStackHeight = function () {
             return Configuration.stackHeight + Math.ceil(game.State.intensity() / 2);
         };
+
         Configuration.getSpawnInterval = function () {
             var time = Configuration.spawnInterval - (game.State.intensity() * 100);
             if (time < 1500)
                 return 1500;
             return time;
+        };
+
+        Configuration.getCratePools = function () {
+            return [{
+                    countdown: 3,
+                    baseCountdown: 3,
+                    getVariance: function () {
+                        return (Math.random() * 2) % 1;
+                    },
+                    types: [game.CrateType.rock, game.CrateType.rainbow]
+                }];
         };
         return Configuration;
     })();

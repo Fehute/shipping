@@ -33,6 +33,7 @@ export class Game extends common.BaseModule {
 
         this.board.pause();
         this.modals.gameType(() => gameType.apply(self, arguments));
+        State.cratePools = common.Configuration.getCratePools();
     }
 
     gameType(mode: common.GameMode): void {
@@ -58,6 +59,10 @@ export class Game extends common.BaseModule {
                 State.chainValue = common.Configuration.baseChainValue;
                 State.intensity(1);
                 State.pointThreshhold(common.Configuration.basePointThreshhold);
+                State.clickSpawnRate = common.Configuration.clickSpawnRate;
+                State.clickSpawnCount = common.Configuration.clickSpawnCount;
+                State.totalSpawns = 0;
+                State.cratePools = common.Configuration.getCratePools();
                 this.board.status.resetTimer();
                 State.crates([]);
                 restart.apply(self);
@@ -68,6 +73,14 @@ export class Game extends common.BaseModule {
     restart() {
         this.lost = false;
         this.board.reset();
+    }
+
+    pause() {
+        this.board.pause();
+    }
+
+    resume() {
+        this.board.resume();
     }
 }
 
@@ -81,6 +94,9 @@ export class State {
     static gameMode: common.GameMode;
     static clickSpawnRate: number;
     static clickSpawnCount: number;
+    static specialCrates: number[] = [];
+    static totalSpawns: number = 0;
+    static cratePools: common.CratePool[];
 }
 
 export interface CrateData {
@@ -91,16 +107,75 @@ export interface CrateData {
 }
 
 export class CrateType {
+    static special = -1;
     static one = 0;
     static two = 1;
     static three = 2;
     static four = 3;
     static five = 4;
 
+    //special
+    static none = 0;
+    static rock = 1; //no match, heavy
+    static rainbow = 2; //matches everything
+    static bonus = 3; //extra points
+    static minus = 4; //less points
+    static charge = 5; //charges ability on match
+    static trasher = 6; //empties stack on match
+    static heavy = 7; //can't be picked up
+    static exploding = 8; //removes surrounding crates on match
+    static activeSpawn = 9; //increases spawn rate while alive
+    static matchSpawn = 10; //spawns crates when matched
+    static activePenalty = 11; //all matches worth fewer points while alive
+    static activeBonus = 12; //all matches worth more points while alive - also rainbow
+    static scramble = 13; //fill personal stack with random crates
+
+    
     static styles = ["one", "two", "three", "four", "five"];
 
+    static specialTypes = [
+        //CrateType.none,
+        CrateType.rock,
+        CrateType.rainbow,
+        //CrateType.bonus,
+        //CrateType.minus,
+        //CrateType.charge,
+        //CrateType.trasher,
+        //CrateType.heavy,
+        //CrateType.exploding,
+        //CrateType.activeSpawn,
+        //CrateType.matchSpawn,
+        //CrateType.activePenalty,
+        //CrateType.activeBonus,
+        //CrateType.scramble
+    ];
+    static specialStyles = [
+        "none",
+        "rock",
+        "rainbow",
+        "bonus",
+        "minus",
+        "charge",
+        "trasher",
+        "heavy",
+        "exploding",
+        "activeSpawn",
+        "matchSpawn",
+        "activePenalty",
+        "activeBonus",
+        "scramble"
+    ]
+
     getStyle(): string {
-        return CrateType.styles[this.type];
+        var style = CrateType.styles[this.type]
+        if (this.special) {
+            style += " " + CrateType.specialStyles[this.special];
+        }
+        return style;
+    }
+
+    getSpecialStyle(): string {
+        return CrateType.specialStyles[this.special];
     }
 
     is(t: number) {
@@ -119,23 +194,32 @@ export class CrateType {
         return types[Math.floor(Math.random() * types.length)];
     }
 
-    matches(c: CrateType): Boolean {
-        return this.type == c.type;
+    static getRandomSpecialType(): number {
+        var types = [
+            CrateType.rock,
+            CrateType.rainbow
+        ]
+        return types[Math.floor(Math.random() * types.length)];
     }
 
-    constructor(public type: number) { }
+    matches(c: CrateType): Boolean {
+        var matches = true;
+
+        //don't match rocks
+        matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+
+        //match types
+        matches = matches && this.type == c.type;
+
+        //always match rainbows, even with rocks
+        matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow
+        return matches;
+            
+    }
+
+    constructor(public type: number, public special: number = 0) { }
 }
 
 module Templates {
     export var game = <string>require('text!game/templates/Game.tmpl.html');
 }
-
-/*
- * powers:
- * -extra delay before matching
- * -depth charge
- * 
- * 
- * todo:
- * secret blind guardian level
- */

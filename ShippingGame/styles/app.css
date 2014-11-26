@@ -54,7 +54,20 @@
   user-select: none;
   width: 80px;
   height: 20px;
-  border: 1px solid gray; }
+  border: 1px solid gray;
+  /*
+        "bonus",
+        "minus",
+        "charge",
+        "trasher",
+        "heavy",
+        "exploding",
+        "activeSpawn",
+        "matchSpawn",
+        "activePenalty",
+        "activeBonus",
+        "scramble"
+    */ }
   .crate.one {
     background-color: orange; }
   .crate.two {
@@ -65,8 +78,17 @@
     background-color: green; }
   .crate.five {
     background-color: purple; }
+  .crate.rock {
+    background-color: black; }
+  .crate.rainbow {
+    background-color: hotpink; }
   .crate.matched {
     background-color: gray; }
+  .crate:after {
+    text-align: center;
+    color: #fff; }
+  .crate.bonus:after {
+    content: "BONUS"; }
 
 .modalsContainer .modal {
   position: absolute;
@@ -91,5 +113,8 @@
 
 .ghosted {
   opacity: 0.5; }
+
+.copyright {
+  text-align: center; }
 
 /*# sourceMappingURL=app.css.map */

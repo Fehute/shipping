@@ -36,6 +36,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             this.modals.gameType(function () {
                 return gameType.apply(self, arguments);
             });
+            State.cratePools = common.Configuration.getCratePools();
         }
         Game.prototype.gameType = function (mode) {
             State.gameMode = mode;
@@ -60,6 +61,10 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
                     State.chainValue = common.Configuration.baseChainValue;
                     State.intensity(1);
                     State.pointThreshhold(common.Configuration.basePointThreshhold);
+                    State.clickSpawnRate = common.Configuration.clickSpawnRate;
+                    State.clickSpawnCount = common.Configuration.clickSpawnCount;
+                    State.totalSpawns = 0;
+                    State.cratePools = common.Configuration.getCratePools();
                     _this.board.status.resetTimer();
                     State.crates([]);
                     restart.apply(self);
@@ -70,6 +75,14 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         Game.prototype.restart = function () {
             this.lost = false;
             this.board.reset();
+        };
+
+        Game.prototype.pause = function () {
+            this.board.pause();
+        };
+
+        Game.prototype.resume = function () {
+            this.board.resume();
         };
         return Game;
     })(common.BaseModule);
@@ -83,16 +96,29 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         State.score = ko.observable(0);
         State.intensity = ko.observable(1);
         State.pointThreshhold = ko.observable(common.Configuration.basePointThreshhold);
+
+        State.specialCrates = [];
+        State.totalSpawns = 0;
         return State;
     })();
     exports.State = State;
 
     var CrateType = (function () {
-        function CrateType(type) {
+        function CrateType(type, special) {
+            if (typeof special === "undefined") { special = 0; }
             this.type = type;
+            this.special = special;
         }
         CrateType.prototype.getStyle = function () {
-            return CrateType.styles[this.type];
+            var style = CrateType.styles[this.type];
+            if (this.special) {
+                style += " " + CrateType.specialStyles[this.special];
+            }
+            return style;
+        };
+
+        CrateType.prototype.getSpecialStyle = function () {
+            return CrateType.specialStyles[this.special];
         };
 
         CrateType.prototype.is = function (t) {
@@ -113,16 +139,71 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             return types[Math.floor(Math.random() * types.length)];
         };
 
-        CrateType.prototype.matches = function (c) {
-            return this.type == c.type;
+        CrateType.getRandomSpecialType = function () {
+            var types = [
+                CrateType.rock,
+                CrateType.rainbow
+            ];
+            return types[Math.floor(Math.random() * types.length)];
         };
+
+        CrateType.prototype.matches = function (c) {
+            var matches = true;
+
+            //don't match rocks
+            matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+
+            //match types
+            matches = matches && this.type == c.type;
+
+            //always match rainbows, even with rocks
+            matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow;
+            return matches;
+        };
+        CrateType.special = -1;
         CrateType.one = 0;
         CrateType.two = 1;
         CrateType.three = 2;
         CrateType.four = 3;
         CrateType.five = 4;
 
+        CrateType.none = 0;
+        CrateType.rock = 1;
+        CrateType.rainbow = 2;
+        CrateType.bonus = 3;
+        CrateType.minus = 4;
+        CrateType.charge = 5;
+        CrateType.trasher = 6;
+        CrateType.heavy = 7;
+        CrateType.exploding = 8;
+        CrateType.activeSpawn = 9;
+        CrateType.matchSpawn = 10;
+        CrateType.activePenalty = 11;
+        CrateType.activeBonus = 12;
+        CrateType.scramble = 13;
+
         CrateType.styles = ["one", "two", "three", "four", "five"];
+
+        CrateType.specialTypes = [
+            CrateType.rock,
+            CrateType.rainbow
+        ];
+        CrateType.specialStyles = [
+            "none",
+            "rock",
+            "rainbow",
+            "bonus",
+            "minus",
+            "charge",
+            "trasher",
+            "heavy",
+            "exploding",
+            "activeSpawn",
+            "matchSpawn",
+            "activePenalty",
+            "activeBonus",
+            "scramble"
+        ];
         return CrateType;
     })();
     exports.CrateType = CrateType;
@@ -132,13 +213,4 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         Templates.game = require('text!game/templates/Game.tmpl.html');
     })(Templates || (Templates = {}));
 });
-/*
-* powers:
-* -extra delay before matching
-* -depth charge
-*
-*
-* todo:
-* secret blind guardian level
-*/
 //# sourceMappingURL=Game.js.map
