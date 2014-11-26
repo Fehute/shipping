@@ -50,7 +50,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
             game.State.totalSpawns++;
             var specials = this.getSpecialSpawns();
             this.stacks().forEach(function (stack, i) {
-                return stack.spawnCrate(specials[i]);
+                stack.spawnCrate(specials[i]);
             });
             this.checkForMatch();
         };

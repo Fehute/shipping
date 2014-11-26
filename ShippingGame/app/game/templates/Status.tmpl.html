@@ -13,7 +13,7 @@
         <span class="value" data-bind="text: intensity"></span>
     </div>
     <div class="timer" data-bind="text: timeElapsed"></div>
-    <div class="pause"><button class="pauseButton" data-bind="click: pauseGame, text: pauseLabel">Pause</button></div>
+    <div class="pause"><button class="pauseButton" data-bind="click: pauseGame, text: pauseLabel, visible: !paused()">Pause</button></div>
     <div class="heldCrates">
     </div>
 </div>

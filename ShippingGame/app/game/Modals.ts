@@ -48,13 +48,13 @@ export class Modals {
         });
     }
 
-    paused() {
+    paused(onClose: () => void) {
         var modal = $(Templates.paused);
         this.modals.push(modal);
         this.container.append(modal);
         this.container.find('.closeModal').click(() => {
             modal.remove();
-            game.State.game.board.resume();
+            onClose();
         });
     }
 } 

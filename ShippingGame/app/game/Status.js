@@ -18,6 +18,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             this.heldCrates = [];
             this.heldCratesContainer = this.status.find('.heldCrates');
             this.pauseLabel = ko.observable("Pause");
+            this.paused = ko.observable(false);
             var self = this;
             var updateCrates = this.updateCrates;
             game.State.crates.subscribe(function () {
@@ -81,7 +82,17 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
 
         Status.prototype.pauseGame = function () {
             game.State.game.board.pause();
-            game.State.game.modals.paused();
+            this.paused(true);
+
+            var self = this;
+            game.State.game.modals.paused(function () {
+                self.unpauseGame.apply(self, arguments);
+            });
+        };
+
+        Status.prototype.unpauseGame = function () {
+            game.State.game.board.resume();
+            this.paused(false);
         };
         return Status;
     })(common.BaseRepeatingModule);

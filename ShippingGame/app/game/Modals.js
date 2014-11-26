@@ -2,7 +2,7 @@
 ///<amd-dependency path="text!game/templates/modals/NextLevel.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/GameType.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/Paused.tmpl.html" />
-define(["require", "exports", 'common', 'game/Game', "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html", "text!game/templates/modals/GameType.tmpl.html", "text!game/templates/modals/Paused.tmpl.html"], function(require, exports, common, game) {
+define(["require", "exports", 'common', "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html", "text!game/templates/modals/GameType.tmpl.html", "text!game/templates/modals/Paused.tmpl.html"], function(require, exports, common) {
     var Modals = (function () {
         function Modals(container) {
             this.container = container;
@@ -42,13 +42,13 @@ define(["require", "exports", 'common', 'game/Game', "text!game/templates/modals
             });
         };
 
-        Modals.prototype.paused = function () {
+        Modals.prototype.paused = function (onClose) {
             var modal = $(Templates.paused);
             this.modals.push(modal);
             this.container.append(modal);
             this.container.find('.closeModal').click(function () {
                 modal.remove();
-                game.State.game.board.resume();
+                onClose();
             });
         };
         return Modals;

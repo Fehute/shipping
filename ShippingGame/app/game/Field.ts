@@ -45,7 +45,9 @@ export class Field extends common.BaseModule {
     spawnCrates() {
         game.State.totalSpawns++;
         var specials = this.getSpecialSpawns();
-        this.stacks().forEach((stack, i) => stack.spawnCrate(specials[i]));
+        this.stacks().forEach((stack, i) => {
+            stack.spawnCrate(specials[i]);
+        });
         this.checkForMatch();
     }
 

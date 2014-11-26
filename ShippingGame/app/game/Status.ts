@@ -17,7 +17,7 @@ export class Status extends common.BaseRepeatingModule {
     pointThreshhold: KnockoutObservable<number>;
     stackContents: KnockoutObservableArray<game.CrateData>;
     timer: number;
-    paused: boolean;
+    paused: KnockoutObservable<boolean>;
     pauseLabel: KnockoutObservable<string>;
 
 
@@ -30,6 +30,7 @@ export class Status extends common.BaseRepeatingModule {
         this.heldCrates = [];
         this.heldCratesContainer = this.status.find('.heldCrates');
         this.pauseLabel = ko.observable("Pause");
+        this.paused = ko.observable(false);
         var self = this;
         var updateCrates = this.updateCrates;
         game.State.crates.subscribe(() => updateCrates.apply(self, arguments));
@@ -84,7 +85,17 @@ export class Status extends common.BaseRepeatingModule {
 
     pauseGame() {
         game.State.game.board.pause();
-        game.State.game.modals.paused();
+        this.paused(true);
+
+        var self = this;
+        game.State.game.modals.paused(() => {
+            self.unpauseGame.apply(self, arguments);
+        });
+    }
+
+    unpauseGame() {
+        game.State.game.board.resume();
+        this.paused(false);
     }
 }
 
