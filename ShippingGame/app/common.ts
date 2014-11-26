@@ -82,14 +82,20 @@ export class Configuration {
             game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
         }
         game.State.totalSpawns = 0;
-        game.State.specialCrates.push(Configuration.getNewSpecialCrate());
+        var newSpecial = Configuration.getNewSpecialCrate();
+        if (newSpecial != -1) {
+            game.State.specialCrates.push(newSpecial);
+        }
         game.State.cratePools = Configuration.getCratePools();
     }
 
     static getNewSpecialCrate(): number {
         var types = game.CrateType.specialTypes.filter((t) => (game.State.specialCrates.indexOf(t) == -1));
-
-        return types[Math.floor(Math.random() * types.length)];
+        if (types.length > 0) {
+            return types[Math.floor(Math.random() * types.length)];
+        } else {
+            return -1;
+        }
     }
 
     static getStackHeight = () => {
@@ -97,7 +103,7 @@ export class Configuration {
     }
 
     static getSpawnInterval = () => {
-        var time = Configuration.spawnInterval - (game.State.intensity() * 100);//(Configuration.spawnInterval * (game.State.intensity() / 20));
+        var time = Configuration.spawnInterval - (game.State.intensity() * 100);
         if (time < 1500) return 1500;
         return time;
     }

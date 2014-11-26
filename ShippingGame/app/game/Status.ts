@@ -83,14 +83,8 @@ export class Status extends common.BaseRepeatingModule {
     }
 
     pauseGame() {
-        if (!this.paused) {
-            game.State.game.board.pause();
-            this.pauseLabel("Unpause");
-        } else {
-            game.State.game.board.resume();
-            this.pauseLabel("Pause");
-        }
-        this.paused = !this.paused;
+        game.State.game.board.pause();
+        game.State.game.modals.paused();
     }
 }
 

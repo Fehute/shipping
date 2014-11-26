@@ -80,14 +80,8 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
         };
 
         Status.prototype.pauseGame = function () {
-            if (!this.paused) {
-                game.State.game.board.pause();
-                this.pauseLabel("Unpause");
-            } else {
-                game.State.game.board.resume();
-                this.pauseLabel("Pause");
-            }
-            this.paused = !this.paused;
+            game.State.game.board.pause();
+            game.State.game.modals.paused();
         };
         return Status;
     })(common.BaseRepeatingModule);

@@ -1,7 +1,8 @@
 ﻿///<amd-dependency path="text!game/templates/modals/GameOver.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/NextLevel.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/GameType.tmpl.html" />
-define(["require", "exports", 'common', "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html", "text!game/templates/modals/GameType.tmpl.html"], function(require, exports, common) {
+///<amd-dependency path="text!game/templates/modals/Paused.tmpl.html" />
+define(["require", "exports", 'common', 'game/Game', "text!game/templates/modals/GameOver.tmpl.html", "text!game/templates/modals/NextLevel.tmpl.html", "text!game/templates/modals/GameType.tmpl.html", "text!game/templates/modals/Paused.tmpl.html"], function(require, exports, common, game) {
     var Modals = (function () {
         function Modals(container) {
             this.container = container;
@@ -40,6 +41,16 @@ define(["require", "exports", 'common', "text!game/templates/modals/GameOver.tmp
                 onSelect(1 /* Click */);
             });
         };
+
+        Modals.prototype.paused = function () {
+            var modal = $(Templates.paused);
+            this.modals.push(modal);
+            this.container.append(modal);
+            this.container.find('.closeModal').click(function () {
+                modal.remove();
+                game.State.game.board.resume();
+            });
+        };
         return Modals;
     })();
     exports.Modals = Modals;
@@ -49,6 +60,7 @@ define(["require", "exports", 'common', "text!game/templates/modals/GameOver.tmp
         Templates.gameOver = require('text!game/templates/modals/GameOver.tmpl.html');
         Templates.nextLevel = require('text!game/templates/modals/NextLevel.tmpl.html');
         Templates.gameType = require('text!game/templates/modals/GameType.tmpl.html');
+        Templates.paused = require('text!game/templates/modals/Paused.tmpl.html');
     })(Templates || (Templates = {}));
 });
 //# sourceMappingURL=Modals.js.map

@@ -1,10 +1,12 @@
 ﻿///<amd-dependency path="text!game/templates/modals/GameOver.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/NextLevel.tmpl.html" />
 ///<amd-dependency path="text!game/templates/modals/GameType.tmpl.html" />
+///<amd-dependency path="text!game/templates/modals/Paused.tmpl.html" />
 
 import common = require('common');
 import board = require('game/Board');
 import ko = require('knockout');
+import game = require('game/Game');
 
 export class Modals {
     modals: JQuery[] = [];
@@ -45,10 +47,22 @@ export class Modals {
             onSelect(common.GameMode.Click);
         });
     }
+
+    paused() {
+        var modal = $(Templates.paused);
+        this.modals.push(modal);
+        this.container.append(modal);
+        this.container.find('.closeModal').click(() => {
+            modal.remove();
+            game.State.game.board.resume();
+        });
+    }
 } 
 
 module Templates {
     export var gameOver = <string>require('text!game/templates/modals/GameOver.tmpl.html');
     export var nextLevel = <string>require('text!game/templates/modals/NextLevel.tmpl.html');
     export var gameType = <string>require('text!game/templates/modals/GameType.tmpl.html');
+    export var paused = <string>require('text!game/templates/modals/Paused.tmpl.html');
+
 }

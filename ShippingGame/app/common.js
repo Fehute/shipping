@@ -50,8 +50,11 @@
             var types = game.CrateType.specialTypes.filter(function (t) {
                 return (game.State.specialCrates.indexOf(t) == -1);
             });
-
-            return types[Math.floor(Math.random() * types.length)];
+            if (types.length > 0) {
+                return types[Math.floor(Math.random() * types.length)];
+            } else {
+                return -1;
+            }
         };
         Configuration.basePointThreshhold = 60;
         Configuration.numStacks = 5;
@@ -90,7 +93,10 @@
                 game.State.clickSpawnRate = Configuration.clickSpawnRate - Math.floor((Math.floor(game.State.intensity() / 4) % 3));
             }
             game.State.totalSpawns = 0;
-            game.State.specialCrates.push(Configuration.getNewSpecialCrate());
+            var newSpecial = Configuration.getNewSpecialCrate();
+            if (newSpecial != -1) {
+                game.State.specialCrates.push(newSpecial);
+            }
             game.State.cratePools = Configuration.getCratePools();
         };
 
