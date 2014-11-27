@@ -27,6 +27,17 @@ export class Crate extends common.BaseRepeatingModule {
         //play animations and stuff
         this.crate.addClass('matched');
         setTimeout(() => this.remove(), common.Configuration.rematchDelay);
+
+        if (this.type.special == game.CrateType.scramble) {
+            //scramble crate effect - fill stack with random crates
+            var randomCrates: game.CrateData[] = [];
+            for (var i = 0; i < common.Configuration.maxHeldCrates; i++) {
+                randomCrates.push({
+                    type: new game.CrateType(game.CrateType.getRandomType()),
+                });
+            }
+            game.State.crates(randomCrates);
+        }
     }
 
     initData(data: game.CrateData, notType?: game.CrateType, special: number = game.CrateType.none) {

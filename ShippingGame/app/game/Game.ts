@@ -147,7 +147,7 @@ export class CrateType {
         //CrateType.matchSpawn,
         //CrateType.activePenalty,
         //CrateType.activeBonus,
-        //CrateType.scramble
+        CrateType.scramble
     ];
     static specialStyles = [
         "none",

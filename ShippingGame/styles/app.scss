@@ -122,12 +122,15 @@
         content: "HEAVY";
     }
 
+    &.scramble:after {
+        content: "CLUTTER";
+    }
+
     /*
         "bonus",
         "minus",
         "charge",
         "trasher",
-        "heavy",
         "exploding",
         "activeSpawn",
         "matchSpawn",

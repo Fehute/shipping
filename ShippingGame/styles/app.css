@@ -61,7 +61,6 @@
         "minus",
         "charge",
         "trasher",
-        "heavy",
         "exploding",
         "activeSpawn",
         "matchSpawn",
@@ -96,6 +95,8 @@
     content: "BONUS"; }
   .crate.heavy:after {
     content: "HEAVY"; }
+  .crate.scramble:after {
+    content: "CLUTTER"; }
 
 .modalsContainer .modal {
   position: absolute;

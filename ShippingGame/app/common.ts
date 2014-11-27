@@ -118,7 +118,7 @@ export class Configuration {
              countdown: 4,
              baseCountdown: 4,
              getVariance: () => (Math.random() * 2) % 1,
-             types: [game.CrateType.heavy]
+             types: [game.CrateType.heavy, game.CrateType.scramble]
         }];
     }
 }

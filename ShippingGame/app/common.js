@@ -126,7 +126,7 @@
                     getVariance: function () {
                         return (Math.random() * 2) % 1;
                     },
-                    types: [game.CrateType.heavy]
+                    types: [game.CrateType.heavy, game.CrateType.scramble]
                 }];
         };
         return Configuration;
