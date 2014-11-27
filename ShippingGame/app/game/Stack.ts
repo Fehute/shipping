@@ -53,7 +53,13 @@ export class Stack extends common.BaseRepeatingModule {
     }
 
     grab() {
-        if (this.crates().length > 0 && this.crates.slice(-1)[0].type.special != game.CrateType.rock) {
+        if (this.crates().length > 0) {
+            var topCrateType = this.crates.slice(-1)[0].type;
+            if (topCrateType.special == game.CrateType.rock) {
+                return; //can't pick up rocks
+            } else if (topCrateType.special == game.CrateType.heavy) {
+                return; //can't pick up heavy
+            }
             var crate = this.popCrate();
             game.State.chainValue = common.Configuration.baseChainValue;
             game.State.crates.push(crate.getData());

@@ -141,7 +141,7 @@ export class CrateType {
         //CrateType.minus,
         //CrateType.charge,
         //CrateType.trasher,
-        //CrateType.heavy,
+        CrateType.heavy,
         //CrateType.exploding,
         //CrateType.activeSpawn,
         //CrateType.matchSpawn,

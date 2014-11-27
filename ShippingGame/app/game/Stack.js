@@ -56,7 +56,13 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
         };
 
         Stack.prototype.grab = function () {
-            if (this.crates().length > 0 && this.crates.slice(-1)[0].type.special != game.CrateType.rock) {
+            if (this.crates().length > 0) {
+                var topCrateType = this.crates.slice(-1)[0].type;
+                if (topCrateType.special == game.CrateType.rock) {
+                    return;
+                } else if (topCrateType.special == game.CrateType.heavy) {
+                    return;
+                }
                 var crate = this.popCrate();
                 game.State.chainValue = common.Configuration.baseChainValue;
                 game.State.crates.push(crate.getData());

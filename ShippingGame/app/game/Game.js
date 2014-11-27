@@ -186,7 +186,8 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
 
         CrateType.specialTypes = [
             CrateType.rock,
-            CrateType.rainbow
+            CrateType.rainbow,
+            CrateType.heavy
         ];
         CrateType.specialStyles = [
             "none",

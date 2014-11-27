@@ -112,13 +112,21 @@
         };
 
         Configuration.getCratePools = function () {
-            return [{
+            return [
+                {
                     countdown: 3,
                     baseCountdown: 3,
                     getVariance: function () {
                         return (Math.random() * 2) % 1;
                     },
                     types: [game.CrateType.rock, game.CrateType.rainbow]
+                }, {
+                    countdown: 4,
+                    baseCountdown: 4,
+                    getVariance: function () {
+                        return (Math.random() * 2) % 1;
+                    },
+                    types: [game.CrateType.heavy]
                 }];
         };
         return Configuration;

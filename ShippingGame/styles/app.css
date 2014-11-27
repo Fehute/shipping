@@ -55,6 +55,7 @@
   width: 80px;
   height: 20px;
   border: 1px solid gray;
+  position: relative;
   /*
         "bonus",
         "minus",
@@ -86,16 +87,23 @@
     background-color: gray; }
   .crate:after {
     text-align: center;
-    color: #fff; }
+    color: #fff;
+    font-weight: bold;
+    left: 0;
+    position: absolute;
+    width: 100%; }
   .crate.bonus:after {
     content: "BONUS"; }
+  .crate.heavy:after {
+    content: "HEAVY"; }
 
 .modalsContainer .modal {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
-  text-align: center; }
+  text-align: center;
+  z-index: 1; }
 .modalsContainer .popup {
   width: 200px;
   height: 100px;
