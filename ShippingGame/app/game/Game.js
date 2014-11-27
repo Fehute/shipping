@@ -65,6 +65,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
                     State.clickSpawnCount = common.Configuration.clickSpawnCount;
                     State.totalSpawns = 0;
                     State.cratePools = common.Configuration.getCratePools();
+                    State.specialCrates = [];
                     _this.board.status.resetTimer();
                     State.crates([]);
                     restart.apply(self);

@@ -63,6 +63,7 @@ export class Game extends common.BaseModule {
                 State.clickSpawnCount = common.Configuration.clickSpawnCount;
                 State.totalSpawns = 0;
                 State.cratePools = common.Configuration.getCratePools();
+                State.specialCrates = [];
                 this.board.status.resetTimer();
                 State.crates([]);
                 restart.apply(self);
