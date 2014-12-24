@@ -32,7 +32,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             if (this.type.special == game.CrateType.scramble) {
                 //scramble crate effect - fill stack with random crates
                 var randomCrates = [];
-                for (var i = 0; i < common.Configuration.maxHeldCrates; i++) {
+                for (var i = 0; i < game.State.maxHeldCrates(); i++) {
                     randomCrates.push({
                         type: new game.CrateType(game.CrateType.getRandomType())
                     });

@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "text!game/templates/Status.tmpl.html"], function(require, exports, common, ko, game, crate) {
+define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', 'game/Ability', "text!game/templates/Status.tmpl.html"], function(require, exports, common, ko, game, crate, ability) {
     var Status = (function (_super) {
         __extends(Status, _super);
         function Status(container, crateData) {
@@ -17,6 +17,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             this.stackContents = game.State.crates;
             this.heldCrates = [];
             this.heldCratesContainer = this.status.find('.heldCrates');
+            this.abilitySlotsContainer = this.status.find('.abilitySlots');
             this.pauseLabel = ko.observable("Pause");
             this.paused = ko.observable(false);
             var self = this;
@@ -29,6 +30,11 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
             var offset = d.getTimezoneOffset();
             this.startTime = d.getTime() - offset * 60000;
             this.timeElapsed = ko.observable(this.getTime());
+
+            this.abilities = new Array(game.State.abilitySlots());
+            game.State.abilities.subscribe(function (val) {
+                return _this.updateAbilities(val);
+            });
 
             _super.call(this, container, this.status);
             ko.applyBindings(this, this.status[0]);
@@ -93,6 +99,19 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', "
         Status.prototype.unpauseGame = function () {
             game.State.game.board.resume();
             this.paused(false);
+        };
+
+        Status.prototype.updateAbilities = function (val) {
+            var _this = this;
+            val.forEach(function (a, i) {
+                // add or replace abilities as necessary
+                if (!_this.abilities[i]) {
+                    _this.abilities[i] = new ability.Ability(_this.abilitySlotsContainer, a);
+                } else if (a.type() != _this.abilities[i].type()) {
+                    _this.abilities[i].remove();
+                    _this.abilities[i] = new ability.Ability(_this.abilitySlotsContainer, a);
+                }
+            });
         };
         return Status;
     })(common.BaseRepeatingModule);

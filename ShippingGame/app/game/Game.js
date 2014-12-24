@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board, ko, modals) {
+define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals', 'game/Ability', "text!game/templates/Game.tmpl.html"], function(require, exports, common, board, ko, modals, ability) {
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game(container, args) {
@@ -45,6 +45,13 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
                 State.clickSpawnCount = common.Configuration.clickSpawnCount;
             } else if (mode == 0 /* Timed */) {
             }
+
+            var startingAbilities = [];
+            for (var i = 0; i < State.abilitySlots(); i++) {
+                startingAbilities.push(new ability.AbilityData());
+            }
+            State.abilities(startingAbilities);
+
             this.board.reset();
         };
 
@@ -64,10 +71,18 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
                     State.clickSpawnRate = common.Configuration.clickSpawnRate;
                     State.clickSpawnCount = common.Configuration.clickSpawnCount;
                     State.totalSpawns = 0;
+                    State.cash = 0;
                     State.cratePools = common.Configuration.getCratePools();
                     State.specialCrates = [];
                     _this.board.status.resetTimer();
                     State.crates([]);
+                    State.maxHeldCrates(common.Configuration.baseMaxHeldCrates);
+                    State.abilitySlots(common.Configuration.baseAbilitySlots);
+                    var startingAbilities = [];
+                    for (var i = 0; i < State.abilitySlots(); i++) {
+                        startingAbilities.push(new ability.AbilityData());
+                    }
+                    State.abilities(startingAbilities);
                     restart.apply(self);
                 });
             }
@@ -100,6 +115,11 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
 
         State.specialCrates = [];
         State.totalSpawns = 0;
+
+        State.cash = 0;
+        State.abilities = ko.observableArray([]);
+        State.abilitySlots = ko.observable(common.Configuration.baseAbilitySlots);
+        State.maxHeldCrates = ko.observable(common.Configuration.baseMaxHeldCrates);
         return State;
     })();
     exports.State = State;

@@ -4,7 +4,7 @@ todo:
 * instead of directly sending the event data, create our own interface for
 it and convert all device input data to the form/stuff we care about
 */
-define(["require", "exports", 'game/Game', 'common'], function(require, exports, game, common) {
+define(["require", "exports", 'game/Game'], function(require, exports, game) {
     var InputMode;
     (function (InputMode) {
         InputMode[InputMode["DnD"] = 0] = "DnD";
@@ -18,7 +18,7 @@ define(["require", "exports", 'game/Game', 'common'], function(require, exports,
             $(el).on("mousedown", function (e) {
                 if (!game.State.crates().length && e.which == 1) {
                     callback(e);
-                } else if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
+                } else if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
                     e.originalEvent.preventDefault();
                     e.originalEvent.stopPropagation();
                     callback(e);
@@ -35,7 +35,7 @@ define(["require", "exports", 'game/Game', 'common'], function(require, exports,
                 }
             });
             $(el).on("mousedown", function (e) {
-                if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
+                if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
                     e.originalEvent.preventDefault();
                     e.originalEvent.stopPropagation();
                     callback(e);

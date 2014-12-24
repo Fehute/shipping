@@ -51,11 +51,12 @@ export class Configuration {
     static numStacks: number = 5;
     static stackHeight: number = 8;
     static matchAmount: number = 4;
-    static maxHeldCrates: number = 3;
+    static baseMaxHeldCrates: number = 3;
     static rematchDelay: number = 500; // animation delay for subsequent match checking on matches
     static startDelay: number = 1000;
     static spawnInterval: number = 3500;
     static maxStackSize: number = 25;
+    static baseAbilitySlots: number = 3;
     static clickSpawnRate: number = 6;
     static clickSpawnCount: number = 1;
     static baseChainValue: number = 0.5;

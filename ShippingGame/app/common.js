@@ -60,11 +60,12 @@
         Configuration.numStacks = 5;
         Configuration.stackHeight = 8;
         Configuration.matchAmount = 4;
-        Configuration.maxHeldCrates = 3;
+        Configuration.baseMaxHeldCrates = 3;
         Configuration.rematchDelay = 500;
         Configuration.startDelay = 1000;
         Configuration.spawnInterval = 3500;
         Configuration.maxStackSize = 25;
+        Configuration.baseAbilitySlots = 3;
         Configuration.clickSpawnRate = 6;
         Configuration.clickSpawnCount = 1;
         Configuration.baseChainValue = 0.5;

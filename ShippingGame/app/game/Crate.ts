@@ -31,7 +31,7 @@ export class Crate extends common.BaseRepeatingModule {
         if (this.type.special == game.CrateType.scramble) {
             //scramble crate effect - fill stack with random crates
             var randomCrates: game.CrateData[] = [];
-            for (var i = 0; i < common.Configuration.maxHeldCrates; i++) {
+            for (var i = 0; i < game.State.maxHeldCrates(); i++) {
                 randomCrates.push({
                     type: new game.CrateType(game.CrateType.getRandomType()),
                 });

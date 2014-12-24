@@ -25,6 +25,7 @@
     <Content Include="app\game\templates\modals\GameOver.tmpl.html" />
     <Content Include="app\game\templates\modals\GameType.tmpl.html" />
     <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
+    <Content Include="app\game\templates\modals\Paused.tmpl.html" />
     <Content Include="app\game\templates\Stack.tmpl.html" />
     <Content Include="app\game\templates\Status.tmpl.html" />
     <Content Include="app\lib\jquery-1.11.1.min.js" />
@@ -35,6 +36,7 @@
     <Content Include="app\lib\knockout-3.2.0.js" />
     <Content Include="app\lib\require.js" />
     <Content Include="app\test.js" />
+    <Content Include="assets\SoetsuCastle.png" />
     <Content Include="index.html" />
     <Content Include="styles\app.css">
       <DependentUpon>app.scss</DependentUpon>

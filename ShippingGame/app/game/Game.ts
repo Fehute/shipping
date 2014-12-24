@@ -5,6 +5,7 @@ import board = require('game/Board');
 import ko = require('knockout');
 import modals = require('game/Modals');
 import status = require('game/Status');
+import ability = require('game/Ability');
 
 export class Game extends common.BaseModule {
     board: board.Board;
@@ -44,6 +45,13 @@ export class Game extends common.BaseModule {
         } else if (mode == common.GameMode.Timed) {
 
         }
+
+        var startingAbilities = [];
+        for (var i = 0; i < State.abilitySlots(); i++) {
+            startingAbilities.push(new ability.AbilityData());
+        }
+        State.abilities(startingAbilities);
+
         this.board.reset();
     }
 
@@ -62,10 +70,18 @@ export class Game extends common.BaseModule {
                 State.clickSpawnRate = common.Configuration.clickSpawnRate;
                 State.clickSpawnCount = common.Configuration.clickSpawnCount;
                 State.totalSpawns = 0;
+                State.cash = 0;
                 State.cratePools = common.Configuration.getCratePools();
                 State.specialCrates = [];
                 this.board.status.resetTimer();
                 State.crates([]);
+                State.maxHeldCrates(common.Configuration.baseMaxHeldCrates);
+                State.abilitySlots(common.Configuration.baseAbilitySlots);
+                var startingAbilities = [];
+                for (var i = 0; i < State.abilitySlots(); i++) {
+                    startingAbilities.push(new ability.AbilityData());
+                }
+                State.abilities(startingAbilities);
                 restart.apply(self);
              });
         }
@@ -98,6 +114,10 @@ export class State {
     static specialCrates: number[] = [];
     static totalSpawns: number = 0;
     static cratePools: common.CratePool[];
+    static cash: number = 0;
+    static abilities: KnockoutObservableArray<ability.AbilityData> = ko.observableArray([]);
+    static abilitySlots: KnockoutObservable<number> = ko.observable(common.Configuration.baseAbilitySlots);
+    static maxHeldCrates: KnockoutObservable<number> = ko.observable(common.Configuration.baseMaxHeldCrates);
 }
 
 export interface CrateData {

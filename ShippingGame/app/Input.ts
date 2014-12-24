@@ -24,7 +24,7 @@ export function grab(el: any, callback: (e: any) => void) {
         $(el).on("mousedown", (e: JQueryMouseEventObject) => {
             if (!game.State.crates().length && e.which == 1) {
                 callback(e);
-            } else if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
+            } else if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
                 e.originalEvent.preventDefault();
                 e.originalEvent.stopPropagation();
                 callback(e);
@@ -41,7 +41,7 @@ export function grab(el: any, callback: (e: any) => void) {
             }
         });
         $(el).on("mousedown", (e: JQueryMouseEventObject) => {
-            if (e.which == 3 && game.State.crates().length < common.Configuration.maxHeldCrates) {
+            if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
                 e.originalEvent.preventDefault();
                 e.originalEvent.stopPropagation();
                 callback(e);

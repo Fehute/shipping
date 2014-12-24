@@ -4,6 +4,7 @@ import common = require('common');
 import ko = require('knockout');
 import game = require('game/Game');
 import crate = require('game/Crate');
+import ability = require('game/Ability');
 
 export class Status extends common.BaseRepeatingModule {
     status: JQuery;
@@ -19,6 +20,8 @@ export class Status extends common.BaseRepeatingModule {
     timer: number;
     paused: KnockoutObservable<boolean>;
     pauseLabel: KnockoutObservable<string>;
+    abilitySlotsContainer: JQuery;
+    abilities: ability.Ability[];
 
 
     constructor(container: JQuery, crateData?: game.CrateData) {
@@ -29,6 +32,7 @@ export class Status extends common.BaseRepeatingModule {
         this.stackContents = game.State.crates;
         this.heldCrates = [];
         this.heldCratesContainer = this.status.find('.heldCrates');
+        this.abilitySlotsContainer = this.status.find('.abilitySlots');
         this.pauseLabel = ko.observable("Pause");
         this.paused = ko.observable(false);
         var self = this;
@@ -39,6 +43,9 @@ export class Status extends common.BaseRepeatingModule {
         var offset = d.getTimezoneOffset();
         this.startTime = d.getTime() - offset * 60000;
         this.timeElapsed = ko.observable(this.getTime());
+
+        this.abilities = new Array(game.State.abilitySlots());
+        game.State.abilities.subscribe((val) => this.updateAbilities(val));
 
         super(container, this.status);
         ko.applyBindings(this, this.status[0]);
@@ -96,6 +103,18 @@ export class Status extends common.BaseRepeatingModule {
     unpauseGame() {
         game.State.game.board.resume();
         this.paused(false);
+    }
+
+    updateAbilities(val: ability.AbilityData[]) {
+        val.forEach((a, i) => {
+            // add or replace abilities as necessary
+            if (!this.abilities[i]) {
+                this.abilities[i] = new ability.Ability(this.abilitySlotsContainer, a);
+            } else if (a.type() != this.abilities[i].type()) {
+                this.abilities[i].remove();
+                this.abilities[i] = new ability.Ability(this.abilitySlotsContainer, a);
+            }
+        });
     }
 }
 
