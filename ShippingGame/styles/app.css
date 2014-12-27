@@ -1,9 +1,19 @@
-﻿body {
+/* Variables */
+/* Mixin */
+/* Styles */
+html, body {
+  height: 100%;
+  overflow: hidden; }
+
+body {
   font-family: 'Segoe UI', sans-serif;
+  color: #fff;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; }
+  user-select: none;
+  perspective: 340px;
+  background: #111; }
 
 .stack {
   min-height: 585px;
@@ -21,12 +31,20 @@
   display: inline-block; }
 
 .fieldContainer {
-  display: inline-block; }
+  display: inline-block;
+  padding: 5px;
+  border: 2px solid #EBE608;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  background-color: #444; }
 
 .field {
   text-align: center;
   border: 1px solid #ccc;
-  padding-right: 2px; }
+  border-radius: 3px;
+  background-color: #666;
+  padding: 5px;
+  border: 2px solid #C4C107; }
 
 .statusContainer {
   display: inline-block;
@@ -52,32 +70,48 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  border-radius: 3px;
   width: 80px;
   height: 20px;
-  border: 1px solid gray;
   position: relative;
+  margin-bottom: 3px;
   /*
-        "bonus",
-        "minus",
-        "charge",
-        "trasher",
-        "exploding",
-        "activeSpawn",
-        "matchSpawn",
-        "activePenalty",
-        "activeBonus",
-        "scramble"
-    */ }
+      "bonus",
+      "minus",
+      "charge",
+      "trasher",
+      "exploding",
+      "activeSpawn",
+      "matchSpawn",
+      "activePenalty",
+      "activeBonus",
+      "scramble"
+  */ }
   .crate.one {
-    background-color: orange; }
+    background-color: #EBE608;
+    -webkit-box-shadow: 0px 3px 0px 0px #C4C107;
+    -moz-box-shadow: 0px 3px 0px 0px #C4C107;
+    box-shadow: 0px 3px 0px 0px #C4C107; }
   .crate.two {
-    background-color: brown; }
+    background-color: #FF2F1D;
+    -webkit-box-shadow: 0px 3px 0px 0px #BF2316;
+    -moz-box-shadow: 0px 3px 0px 0px #BF2316;
+    box-shadow: 0px 3px 0px 0px #BF2316; }
   .crate.three {
-    background-color: blue; }
+    background-color: #0078FF;
+    -webkit-box-shadow: 0px 3px 0px 0px #005DC4;
+    -moz-box-shadow: 0px 3px 0px 0px #005DC4;
+    box-shadow: 0px 3px 0px 0px #005DC4; }
   .crate.four {
-    background-color: green; }
+    background-color: #29CC0C;
+    -webkit-box-shadow: 0px 3px 0px 0px #27C20B;
+    -moz-box-shadow: 0px 3px 0px 0px #27C20B;
+    box-shadow: 0px 3px 0px 0px #27C20B; }
   .crate.five {
-    background-color: purple; }
+    background-color: #CE37F0;
+    -webkit-box-shadow: 0px 3px 0px 0px #AF2FCC;
+    -moz-box-shadow: 0px 3px 0px 0px #AF2FCC;
+    box-shadow: 0px 3px 0px 0px #AF2FCC; }
   .crate.rock {
     background-color: black; }
   .crate.rainbow {
@@ -113,7 +147,8 @@
   top: 30%;
   position: relative; }
 .modalsContainer .message {
-  padding: 10px 0 20px; }
+  padding: 10px 0 20px;
+  color: #222; }
 .modalsContainer .buttons button {
   width: 30%; }
 

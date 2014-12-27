@@ -1,10 +1,40 @@
-﻿body {
-    font-family: 'Segoe UI', sans-serif;
+﻿/* Variables */
 
+$blue: #0078FF;
+$darkblue: #005DC4;
+$red: #FF2F1D;
+$darkred: #BF2316;
+$green: #29CC0C;
+$darkgreen: #27C20B;
+$yellow: #EBE608;
+$darkyellow: #C4C107;
+$purple: #CE37F0;
+$darkpurple: #AF2FCC;
+
+/* Mixin */
+
+@mixin shadow($color) {
+    -webkit-box-shadow: 0px 3px 0px 0px $color;
+    -moz-box-shadow:    0px 3px 0px 0px $color;
+    box-shadow:         0px 3px 0px 0px $color;
+}
+
+/* Styles */
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    perspective: 340px;
+    background: #111;
 }
 
 .stack {
@@ -29,12 +59,20 @@
 
 .fieldContainer {
     display: inline-block;
+    padding: 5px;
+    border: 2px solid $yellow;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    background-color: #444;
 }
 
 .field {
     text-align: center;
     border: 1px solid #ccc;
-    padding-right: 2px;
+    border-radius: 3px;
+    background-color: #666;
+    padding: 5px;
+    border: 2px solid $darkyellow;
 }
 
 .statusContainer {
@@ -68,29 +106,35 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    border-radius: 3px;
     width: 80px;
     height: 20px;
-    border: 1px solid gray;
     position: relative;
+    margin-bottom: 3px;
 
     &.one {
-        background-color: orange;
+        background-color: $yellow;
+        @include shadow($darkyellow);
     }
 
     &.two {
-        background-color: brown;
+        background-color: $red;
+        @include shadow($darkred);
     }
 
     &.three {
-        background-color: blue;
+        background-color: $blue;
+        @include shadow($darkblue);
     }
 
     &.four {
-        background-color: green;
+        background-color: $green;
+        @include shadow($darkgreen);
     }
 
     &.five {
-        background-color: purple;
+        background-color: $purple;
+        @include shadow($darkpurple);
     }
 
     &.rock {
@@ -161,6 +205,7 @@
 
     .message {
         padding: 10px 0 20px;
+        color: #222;
     }
 
     .buttons button {
