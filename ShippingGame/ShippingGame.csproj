@@ -22,6 +22,7 @@
     <Content Include="app\game\templates\Crate.tmpl.html" />
     <Content Include="app\game\templates\Field.tmpl.html" />
     <Content Include="app\game\templates\Game.tmpl.html" />
+    <Content Include="app\game\templates\Ability.html" />
     <Content Include="app\game\templates\modals\GameOver.tmpl.html" />
     <Content Include="app\game\templates\modals\GameType.tmpl.html" />
     <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
@@ -49,6 +50,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app\app.ts" />
     <TypeScriptCompile Include="app\common.ts" />
+    <TypeScriptCompile Include="app\game\Ability.ts" />
     <TypeScriptCompile Include="app\game\Board.ts" />
     <TypeScriptCompile Include="app\game\Crate.ts" />
     <TypeScriptCompile Include="app\game\Field.ts" />
