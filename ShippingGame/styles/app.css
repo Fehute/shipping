@@ -11,9 +11,7 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
-  perspective: 340px;
-  background: #111; }
+  user-select: none; }
 
 .stack {
   min-height: 585px;
@@ -25,7 +23,9 @@ body {
   user-select: none; }
 
 .board {
-  text-align: center; }
+  text-align: center;
+  position: relative;
+  z-index: 1000; }
 
 .stackContainer {
   display: inline-block; }
@@ -35,14 +35,13 @@ body {
   padding: 5px;
   border: 2px solid #EBE608;
   border-radius: 2px;
-  margin-bottom: 20px;
-  background-color: #444; }
+  margin-bottom: 20px; }
 
 .field {
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 3px;
-  background-color: #666;
+  background-color: rgba(80, 80, 80, 0.5);
   padding: 5px;
   border: 2px solid #C4C107; }
 
@@ -50,16 +49,20 @@ body {
   display: inline-block;
   float: left;
   position: absolute;
-  padding: 4px 10px 10px 10px;
+  padding: 4px 5px 5px 5px;
   margin-left: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #EBE608;
+  background-color: #444;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
 
 .status {
-  text-align: left; }
+  text-align: left;
+  border: 1px solid #C4C107;
+  background-color: #666;
+  padding: 5px; }
   .status .title {
     font-weight: bold; }
   .status .value {
@@ -138,7 +141,7 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   text-align: center;
-  z-index: 1; }
+  z-index: 2000; }
 .modalsContainer .popup {
   width: 200px;
   height: 100px;
@@ -160,5 +163,68 @@ body {
 
 .copyright {
   text-align: center; }
+
+/* Clouds */
+#viewport {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  perspective: 400;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: #0a0a0a;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0a0a0a), color-stop(100%, #1c1c1c));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #0a0a0a 0%, #1c1c1c 100%);
+  /* W3C */ }
+
+#world {
+  height: 512px;
+  left: 50%;
+  margin-left: -256px;
+  margin-top: -256px;
+  position: absolute;
+  top: 50%;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  width: 512px; }
+
+#world div {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d; }
+
+.cloudBase {
+  height: 20px;
+  left: 256px;
+  margin-left: -10px;
+  margin-top: -10px;
+  position: absolute;
+  top: 256px;
+  width: 20px; }
+
+.cloudLayer {
+  height: 256px;
+  left: 50%;
+  margin-left: -128px;
+  margin-top: -128px;
+  position: absolute;
+  top: 50%;
+  width: 256px;
+  -webkit-transition: opacity .5s ease-out;
+  -moz-transition: opacity .5s ease-out;
+  -o-transition: opacity .5s ease-out;
+  transition: opacity .5s ease-out; }
 
 /*# sourceMappingURL=app.css.map */
