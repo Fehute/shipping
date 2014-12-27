@@ -12,13 +12,12 @@ require.config({
         //koamd: 'lib/knockout-amd-helpers.min',
         gridster: 'lib/jquery.gridster.min',
         text: 'lib/text',
-        clouds: 'lib/clouds',
 
         main: 'app',
     },
     shim: {
         'main': {
-            deps: ['jquery', 'knockout', 'gridster', 'clouds']
+            deps: ['jquery', 'knockout', 'gridster']
         },
 
         'gridster': {
