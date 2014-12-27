@@ -1,17 +1,37 @@
 /* Variables */
 /* Mixin */
 /* Styles */
+* {
+  box-sizing: border-box; }
+
 html, body {
   height: 100%;
   overflow: hidden; }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 300;
+  color: #29CC0C;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; }
+  user-select: none;
+  background: #000019;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #000019 0%, #000032 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #000019), color-stop(100%, #000032));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #000019 0%, #000032 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #000019 0%, #000032 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #000019 0%, #000032 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #000019 0%, #000032 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000019', endColorstr='#000032',GradientType=0 );
+  /* IE6-9 */ }
 
 .stack {
   min-height: 585px;
@@ -35,34 +55,38 @@ body {
   padding: 5px;
   border: 2px solid #EBE608;
   border-radius: 2px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  -webkit-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  -moz-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608; }
 
 .field {
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 3px;
-  background-color: rgba(80, 80, 80, 0.5);
   padding: 5px;
-  border: 2px solid #C4C107; }
+  border: 2px solid #C4C107;
+  -webkit-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  -moz-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608; }
 
 .statusContainer {
   display: inline-block;
   float: left;
   position: absolute;
-  padding: 4px 5px 5px 5px;
+  padding: 4px 10px 10px 10px;
   margin-left: 10px;
   border: 2px solid #EBE608;
-  background-color: #444;
+  -webkit-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  -moz-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+  box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
 
 .status {
-  text-align: left;
-  border: 1px solid #C4C107;
-  background-color: #666;
-  padding: 5px; }
+  text-align: left; }
   .status .title {
     font-weight: bold; }
   .status .value {
@@ -91,30 +115,30 @@ body {
       "scramble"
   */ }
   .crate.one {
-    background-color: #EBE608;
-    -webkit-box-shadow: 0px 3px 0px 0px #C4C107;
-    -moz-box-shadow: 0px 3px 0px 0px #C4C107;
-    box-shadow: 0px 3px 0px 0px #C4C107; }
+    border: 2px solid #EBE608;
+    -webkit-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+    -moz-box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608;
+    box-shadow: 0px 0px 10px 0px #EBE608, inset 0px 0px 10px 0px #EBE608; }
   .crate.two {
-    background-color: #FF2F1D;
-    -webkit-box-shadow: 0px 3px 0px 0px #BF2316;
-    -moz-box-shadow: 0px 3px 0px 0px #BF2316;
-    box-shadow: 0px 3px 0px 0px #BF2316; }
+    border: 2px solid #FF2F1D;
+    -webkit-box-shadow: 0px 0px 10px 0px #FF2F1D, inset 0px 0px 10px 0px #FF2F1D;
+    -moz-box-shadow: 0px 0px 10px 0px #FF2F1D, inset 0px 0px 10px 0px #FF2F1D;
+    box-shadow: 0px 0px 10px 0px #FF2F1D, inset 0px 0px 10px 0px #FF2F1D; }
   .crate.three {
-    background-color: #0078FF;
-    -webkit-box-shadow: 0px 3px 0px 0px #005DC4;
-    -moz-box-shadow: 0px 3px 0px 0px #005DC4;
-    box-shadow: 0px 3px 0px 0px #005DC4; }
+    border: 2px solid #0078FF;
+    -webkit-box-shadow: 0px 0px 10px 0px #0078FF, inset 0px 0px 10px 0px #0078FF;
+    -moz-box-shadow: 0px 0px 10px 0px #0078FF, inset 0px 0px 10px 0px #0078FF;
+    box-shadow: 0px 0px 10px 0px #0078FF, inset 0px 0px 10px 0px #0078FF; }
   .crate.four {
-    background-color: #29CC0C;
-    -webkit-box-shadow: 0px 3px 0px 0px #27C20B;
-    -moz-box-shadow: 0px 3px 0px 0px #27C20B;
-    box-shadow: 0px 3px 0px 0px #27C20B; }
+    border: 2px solid #29CC0C;
+    -webkit-box-shadow: 0px 0px 10px 0px #29CC0C, inset 0px 0px 10px 0px #29CC0C;
+    -moz-box-shadow: 0px 0px 10px 0px #29CC0C, inset 0px 0px 10px 0px #29CC0C;
+    box-shadow: 0px 0px 10px 0px #29CC0C, inset 0px 0px 10px 0px #29CC0C; }
   .crate.five {
-    background-color: #CE37F0;
-    -webkit-box-shadow: 0px 3px 0px 0px #AF2FCC;
-    -moz-box-shadow: 0px 3px 0px 0px #AF2FCC;
-    box-shadow: 0px 3px 0px 0px #AF2FCC; }
+    border: 2px solid #CE37F0;
+    -webkit-box-shadow: 0px 0px 10px 0px #CE37F0, inset 0px 0px 10px 0px #CE37F0;
+    -moz-box-shadow: 0px 0px 10px 0px #CE37F0, inset 0px 0px 10px 0px #CE37F0;
+    box-shadow: 0px 0px 10px 0px #CE37F0, inset 0px 0px 10px 0px #CE37F0; }
   .crate.rock {
     background-color: black; }
   .crate.rainbow {
@@ -165,66 +189,128 @@ body {
   text-align: center; }
 
 /* Clouds */
-#viewport {
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-  perspective: 400;
-  position: absolute;
-  right: 0;
-  top: 0;
-  background: #0a0a0a;
-  /* Old browsers */
-  background: -moz-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0a0a0a), color-stop(100%, #1c1c1c));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
-  /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #0a0a0a 0%, #1c1c1c 100%);
-  /* IE10+ */
-  background: linear-gradient(to bottom, #0a0a0a 0%, #1c1c1c 100%);
-  /* W3C */ }
+/* #viewport {
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    perspective: 400; 
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #0a0a0a; 
+    background: -moz-linear-gradient(top,  #0a0a0a 0%, #1c1c1c 100%); 
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0a0a0a), color-stop(100%,#1c1c1c)); 
+    background: -webkit-linear-gradient(top,  #0a0a0a 0%,#1c1c1c 100%);
+    background: -o-linear-gradient(top,  #0a0a0a 0%,#1c1c1c 100%);
+    background: -ms-linear-gradient(top,  #0a0a0a 0%,#1c1c1c 100%); 
+    background: linear-gradient(to bottom,  #0a0a0a 0%,#1c1c1c 100%); 
+}
 
 #world {
-  height: 512px;
-  left: 50%;
-  margin-left: -256px;
-  margin-top: -256px;
-  position: absolute;
-  top: 50%;
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d;
-  width: 512px; }
+    height: 512px;
+    left: 50%;
+    margin-left: -256px;
+    margin-top: -256px;
+    position: absolute;
+    top: 50%;
+   -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+    width: 512px;
+
+}
 
 #world div {
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d; }
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;  
+    -o-transform-style: preserve-3d;    
+}
 
 .cloudBase {
-  height: 20px;
-  left: 256px;
-  margin-left: -10px;
-  margin-top: -10px;
-  position: absolute;
-  top: 256px;
-  width: 20px; }
+    height: 20px;
+    left: 256px;
+    margin-left: -10px;
+    margin-top: -10px;
+    position: absolute;
+    top: 256px;
+    width: 20px;
+}
 
 .cloudLayer {
-  height: 256px;
-  left: 50%;
-  margin-left: -128px;
-  margin-top: -128px;
+    height: 256px;
+    left: 50%;
+    margin-left: -128px;
+    margin-top: -128px;
+    position: absolute;
+    top: 50%;
+    width: 256px;
+    -webkit-transition: opacity .5s ease-out;
+        -moz-transition: opacity .5s ease-out;
+        -o-transition: opacity .5s ease-out;
+        transition: opacity .5s ease-out;
+}*/
+#space, .stars {
+  overflow: hidden;
   position: absolute;
-  top: 50%;
-  width: 256px;
-  -webkit-transition: opacity .5s ease-out;
-  -moz-transition: opacity .5s ease-out;
-  -o-transition: opacity .5s ease-out;
-  transition: opacity .5s ease-out; }
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
+.stars {
+  background-image: radial-gradient(2px 2px at 20px 30px, #eee, transparent), radial-gradient(2px 2px at 40px 70px, #fff, transparent), radial-gradient(2px 2px at 50px 160px, #ddd, transparent), radial-gradient(2px 2px at 90px 40px, #fff, transparent), radial-gradient(2px 2px at 130px 80px, #fff, transparent), radial-gradient(2px 2px at 160px 120px, #ddd, transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  -webkit-animation: zoom 5s infinite;
+  animation: zoom 5s infinite;
+  opacity: 0; }
+
+.stars:nth-child(1) {
+  background-position: 50% 50%;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s; }
+
+.stars:nth-child(2) {
+  background-position: 20% 60%;
+  -webkit-animation-delay: 0s;
+  animation-delay: 1s; }
+
+.stars:nth-child(3) {
+  background-position: -20% -30%;
+  -webkit-animation-delay: 0s;
+  animation-delay: 2s; }
+
+.stars:nth-child(4) {
+  background-position: 40% -80%;
+  -webkit-animation-delay: 0s;
+  animation-delay: 3s; }
+
+.stars:nth-child(5) {
+  background-position: -20% 30%;
+  -webkit-animation-delay: 0s;
+  animation-delay: 4s; }
+
+@-webkit-keyframes zoom {
+  0% {
+    opacity: 1;
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in; }
+  85% {
+    opacity: .5;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear; }
+  100% {
+    opacity: 1; } }
+@keyframes zoom {
+  0% {
+    opacity: 1;
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in; }
+  85% {
+    opacity: .5;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear; }
+  100% {
+    opacity: 1; } }
 
 /*# sourceMappingURL=app.css.map */
