@@ -4,7 +4,7 @@ todo:
 * instead of directly sending the event data, create our own interface for
 it and convert all device input data to the form/stuff we care about
 */
-define(["require", "exports", 'game/Game'], function(require, exports, game) {
+define(["require", "exports", 'game/Game', 'common'], function(require, exports, game, common) {
     var InputMode;
     (function (InputMode) {
         InputMode[InputMode["DnD"] = 0] = "DnD";
@@ -27,18 +27,30 @@ define(["require", "exports", 'game/Game'], function(require, exports, game) {
             });
         } else if (inputMode == 1 /* Click */) {
             $(el).on("click", function (e) {
-                if (!game.State.crates().length && e.which == 1) {
-                    e.originalEvent.preventDefault();
-                    e.originalEvent.stopPropagation();
-                    callback(e);
-                    return false;
+                if (game.State.targetingMode == 0 /* normal */) {
+                    if (!game.State.crates().length && e.which == 1) {
+                        e.originalEvent.preventDefault();
+                        e.originalEvent.stopPropagation();
+                        callback(e);
+                        return false;
+                    }
                 }
             });
             $(el).on("mousedown", function (e) {
-                if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
+                if (e.which == 3) {
+                    game.State.targetingMode = 0 /* normal */; //reset ability targeting
+                    if (game.State.crates().length < game.State.maxHeldCrates()) {
+                        e.originalEvent.preventDefault();
+                        e.originalEvent.stopPropagation();
+                        callback(e);
+                        return false;
+                    }
+                }
+
+                if (e.which == 1 && game.State.targetingMode != 0 /* normal */) {
                     e.originalEvent.preventDefault();
                     e.originalEvent.stopPropagation();
-                    callback(e);
+                    callback(e, game.State.targetingMode);
                     return false;
                 }
             });

@@ -46,6 +46,7 @@ export class Status extends common.BaseRepeatingModule {
 
         this.abilities = new Array(game.State.abilitySlots());
         game.State.abilities.subscribe((val) => this.updateAbilities(val));
+        this.updateAbilities(game.State.abilities());
 
         super(container, this.status);
         ko.applyBindings(this, this.status[0]);

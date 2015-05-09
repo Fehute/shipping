@@ -19,7 +19,7 @@ var inputMode = InputMode.Click;
 
 export function grab(el: JQuery, callback: (e: any) => void);
 export function grab(el: HTMLElement, callback: (e: any) => void);
-export function grab(el: any, callback: (e: any) => void) {
+export function grab(el: any, callback: (e: any, targetingMode?: common.TargetingModes) => void) {
     if (inputMode == InputMode.DnD) {
         $(el).on("mousedown", (e: JQueryMouseEventObject) => {
             if (!game.State.crates().length && e.which == 1) {
@@ -33,18 +33,30 @@ export function grab(el: any, callback: (e: any) => void) {
         });
     } else if (inputMode == InputMode.Click) {
         $(el).on("click", (e) => {
-            if (!game.State.crates().length && e.which == 1) {
-                e.originalEvent.preventDefault();
-                e.originalEvent.stopPropagation();
-                callback(e);
-                return false;
+            if (game.State.targetingMode == common.TargetingModes.normal) {
+                if (!game.State.crates().length && e.which == 1) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    callback(e);
+                    return false;
+                }
             }
         });
         $(el).on("mousedown", (e: JQueryMouseEventObject) => {
-            if (e.which == 3 && game.State.crates().length < game.State.maxHeldCrates()) {
+            if (e.which == 3) {
+                game.State.targetingMode = common.TargetingModes.normal; //reset ability targeting
+                if (game.State.crates().length < game.State.maxHeldCrates()) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    callback(e);
+                    return false;
+                }
+            }
+
+            if (e.which == 1 && game.State.targetingMode != common.TargetingModes.normal) {
                 e.originalEvent.preventDefault();
                 e.originalEvent.stopPropagation();
-                callback(e);
+                callback(e, game.State.targetingMode);
                 return false;
             }
         });

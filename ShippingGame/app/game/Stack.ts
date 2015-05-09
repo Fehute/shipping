@@ -52,18 +52,24 @@ export class Stack extends common.BaseRepeatingModule {
         this.crates(this.generateStartingCrates());
     }
 
-    grab() {
-        if (this.crates().length > 0) {
-            var topCrateType = this.crates.slice(-1)[0].type;
-            if (topCrateType.special == game.CrateType.rock) {
-                return; //can't pick up rocks
-            } else if (topCrateType.special == game.CrateType.heavy) {
-                return; //can't pick up heavy
+    grab(e, targetingMode: common.TargetingModes) {
+        if (!targetingMode || targetingMode == common.TargetingModes.normal) {
+            if (this.crates().length > 0) {
+                var topCrateType = this.crates.slice(-1)[0].type;
+                if (topCrateType.special == game.CrateType.rock) {
+                    return; //can't pick up rocks
+                } else if (topCrateType.special == game.CrateType.heavy) {
+                    return; //can't pick up heavy
+                }
+                var crate = this.popCrate();
+                game.State.chainValue = common.Configuration.baseChainValue;
+                game.State.crates.push(crate.getData());
+                field.Field.crateTouched();
             }
-            var crate = this.popCrate();
-            game.State.chainValue = common.Configuration.baseChainValue;
-            game.State.crates.push(crate.getData());
-            field.Field.crateTouched();
+        } else if (targetingMode == common.TargetingModes.clearStack) {
+            this.crates().forEach((crate) => crate.remove());
+            this.crates([]);
+            game.State.targetingMode = common.TargetingModes.normal;
         }
     }
 

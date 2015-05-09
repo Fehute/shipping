@@ -48,7 +48,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
 
             var startingAbilities = [];
             for (var i = 0; i < State.abilitySlots(); i++) {
-                startingAbilities.push(new ability.AbilityData());
+                startingAbilities.push(new ability.AbilityData(1 /* clearStack */));
             }
             State.abilities(startingAbilities);
 

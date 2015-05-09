@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", 'common', 'knockout', "text!game/templates/Ability.tmpl.html"], function(require, exports, common, ko) {
+define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/templates/Ability.tmpl.html"], function(require, exports, common, ko, game) {
     var Ability = (function (_super) {
         __extends(Ability, _super);
         function Ability(container, data) {
@@ -20,6 +20,7 @@ define(["require", "exports", 'common', 'knockout', "text!game/templates/Ability
                 return data.cooldown();
             });
             this.style = ko.observable(Ability.getStyle(this.type()));
+            this.name = ko.observable(Ability.getName(this.type()));
             _super.call(this, container, this.ability);
             ko.applyBindings(this, this.ability[0]);
         }
@@ -39,10 +40,22 @@ define(["require", "exports", 'common', 'knockout', "text!game/templates/Ability
             this.ability.remove();
         };
 
+        Ability.prototype.useAbility = function () {
+            if (this.type() == 1 /* clearStack */) {
+                game.State.targetingMode = 1 /* clearStack */;
+            }
+        };
+
         Ability.getStyle = function (ability) {
             return Ability.styles[ability];
         };
+
+        Ability.getName = function (ability) {
+            return Ability.styles[ability];
+        };
         Ability.styles = ["empty", "clearStack"];
+
+        Ability.names = ["Empty", "clearStack"];
         return Ability;
     })(common.BaseRepeatingModule);
     exports.Ability = Ability;

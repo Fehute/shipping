@@ -16,6 +16,10 @@ define(["require", "exports", "game/Game"], function(require, exports, game) {
     var el = $('#content')[0];
     var greeter = new App(el);
 });
+//todo abilities
+//cooldown
+//visual indicators
+//shop/acquisition
 //todo here:
 //game configuration
 //custom knockout bindings

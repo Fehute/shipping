@@ -55,18 +55,26 @@ define(["require", "exports", 'common', 'knockout', 'game/Crate', 'Input', 'game
             this.crates(this.generateStartingCrates());
         };
 
-        Stack.prototype.grab = function () {
-            if (this.crates().length > 0) {
-                var topCrateType = this.crates.slice(-1)[0].type;
-                if (topCrateType.special == game.CrateType.rock) {
-                    return;
-                } else if (topCrateType.special == game.CrateType.heavy) {
-                    return;
+        Stack.prototype.grab = function (e, targetingMode) {
+            if (!targetingMode || targetingMode == 0 /* normal */) {
+                if (this.crates().length > 0) {
+                    var topCrateType = this.crates.slice(-1)[0].type;
+                    if (topCrateType.special == game.CrateType.rock) {
+                        return;
+                    } else if (topCrateType.special == game.CrateType.heavy) {
+                        return;
+                    }
+                    var crate = this.popCrate();
+                    game.State.chainValue = common.Configuration.baseChainValue;
+                    game.State.crates.push(crate.getData());
+                    field.Field.crateTouched();
                 }
-                var crate = this.popCrate();
-                game.State.chainValue = common.Configuration.baseChainValue;
-                game.State.crates.push(crate.getData());
-                field.Field.crateTouched();
+            } else if (targetingMode == 1 /* clearStack */) {
+                this.crates().forEach(function (crate) {
+                    return crate.remove();
+                });
+                this.crates([]);
+                game.State.targetingMode = 0 /* normal */;
             }
         };
 

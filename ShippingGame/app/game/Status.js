@@ -35,6 +35,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', 'game/Crate', '
             game.State.abilities.subscribe(function (val) {
                 return _this.updateAbilities(val);
             });
+            this.updateAbilities(game.State.abilities());
 
             _super.call(this, container, this.status);
             ko.applyBindings(this, this.status[0]);

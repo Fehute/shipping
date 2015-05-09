@@ -48,7 +48,7 @@ export class Game extends common.BaseModule {
 
         var startingAbilities = [];
         for (var i = 0; i < State.abilitySlots(); i++) {
-            startingAbilities.push(new ability.AbilityData());
+            startingAbilities.push(new ability.AbilityData(ability.AbilityType.clearStack));
         }
         State.abilities(startingAbilities);
 
@@ -118,6 +118,7 @@ export class State {
     static abilities: KnockoutObservableArray<ability.AbilityData> = ko.observableArray([]);
     static abilitySlots: KnockoutObservable<number> = ko.observable(common.Configuration.baseAbilitySlots);
     static maxHeldCrates: KnockoutObservable<number> = ko.observable(common.Configuration.baseMaxHeldCrates);
+    static targetingMode: common.TargetingModes;
 }
 
 export interface CrateData {

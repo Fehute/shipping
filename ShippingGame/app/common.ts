@@ -124,6 +124,11 @@ export class Configuration {
     }
 }
 
+export enum TargetingModes {
+    normal,
+    clearStack
+}
+
 export interface Match {
     type: game.CrateType;
     count: number;

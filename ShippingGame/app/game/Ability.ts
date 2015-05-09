@@ -10,6 +10,7 @@ export class Ability extends common.BaseRepeatingModule {
     charges: KnockoutComputed<number>;
     cooldown: KnockoutComputed<number>;
     style: KnockoutObservable<string>;
+    name: KnockoutObservable<string>;
 
     constructor(container: JQuery, data: AbilityData) {
         this.ability = $(Templates.ability);
@@ -17,6 +18,7 @@ export class Ability extends common.BaseRepeatingModule {
         this.charges = ko.computed(() => data.charges());
         this.cooldown = ko.computed(() => data.cooldown());
         this.style = ko.observable(Ability.getStyle(this.type()));
+        this.name = ko.observable(Ability.getName(this.type()));
         super(container, this.ability);
         ko.applyBindings(this, this.ability[0]);
     }
@@ -31,8 +33,18 @@ export class Ability extends common.BaseRepeatingModule {
         this.ability.remove();
     }
 
+    useAbility() {
+        if (this.type() == AbilityType.clearStack) {
+            game.State.targetingMode = common.TargetingModes.clearStack;
+        }
+    }
+
     static styles = ["empty", "clearStack"];
     static getStyle(ability: AbilityType): string {
+        return Ability.styles[ability];
+    }
+    static names = ["Empty", "clearStack"];
+    static getName(ability: AbilityType): string {
         return Ability.styles[ability];
     }
 }

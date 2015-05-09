@@ -134,6 +134,12 @@
     })();
     exports.Configuration = Configuration;
 
+    (function (TargetingModes) {
+        TargetingModes[TargetingModes["normal"] = 0] = "normal";
+        TargetingModes[TargetingModes["clearStack"] = 1] = "clearStack";
+    })(exports.TargetingModes || (exports.TargetingModes = {}));
+    var TargetingModes = exports.TargetingModes;
+
     (function (GameMode) {
         GameMode[GameMode["Timed"] = 0] = "Timed";
         GameMode[GameMode["Click"] = 1] = "Click";

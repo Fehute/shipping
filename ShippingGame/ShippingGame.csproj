@@ -22,7 +22,7 @@
     <Content Include="app\game\templates\Crate.tmpl.html" />
     <Content Include="app\game\templates\Field.tmpl.html" />
     <Content Include="app\game\templates\Game.tmpl.html" />
-    <Content Include="app\game\templates\Ability.html" />
+    <Content Include="app\game\templates\Ability.tmpl.html" />
     <Content Include="app\game\templates\modals\GameOver.tmpl.html" />
     <Content Include="app\game\templates\modals\GameType.tmpl.html" />
     <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
