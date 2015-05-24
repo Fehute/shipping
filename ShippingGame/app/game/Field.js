@@ -108,6 +108,9 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
             //make array of these arrays (now we have the grid)
             //search for one color at a time.
             var _this = this;
+            if (game.State.freezeMatching)
+                return;
+
             //stack x crate array of CrateData
             var field = this.stacks().map(function (val) {
                 return val.getContents();

@@ -27,7 +27,8 @@ export class Game extends common.BaseModule {
                 this.board.field.pause();
                 State.crates([]);
                 common.Configuration.increaseIntensity();
-                
+
+                this.board.status.abilities.forEach((ability) => ability.currentCooldown(0));
                 this.modals.nextLevel(() => restart.apply(self));
             }
         });
@@ -46,9 +47,13 @@ export class Game extends common.BaseModule {
 
         }
 
-        var startingAbilities = [];
+        var startingAbilities = [
+            new ability.AbilityData(ability.AbilityType.clearStack, 1, 10),
+            new ability.AbilityData(ability.AbilityType.freezeMatching, 1, 30),
+            new ability.AbilityData(ability.AbilityType.clearStack, 1, 10)
+        ];
         for (var i = 0; i < State.abilitySlots(); i++) {
-            startingAbilities.push(new ability.AbilityData(ability.AbilityType.clearStack));
+            startingAbilities.push();
         }
         State.abilities(startingAbilities);
 
@@ -119,6 +124,7 @@ export class State {
     static abilitySlots: KnockoutObservable<number> = ko.observable(common.Configuration.baseAbilitySlots);
     static maxHeldCrates: KnockoutObservable<number> = ko.observable(common.Configuration.baseMaxHeldCrates);
     static targetingMode: common.TargetingModes;
+    static freezeMatching: boolean = false;
 }
 
 export interface CrateData {

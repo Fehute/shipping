@@ -17,7 +17,6 @@ define(["require", "exports", "game/Game"], function(require, exports, game) {
     var greeter = new App(el);
 });
 //todo abilities
-//cooldown
 //visual indicators
 //shop/acquisition
 //todo here:

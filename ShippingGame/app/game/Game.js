@@ -26,6 +26,9 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
                     State.crates([]);
                     common.Configuration.increaseIntensity();
 
+                    _this.board.status.abilities.forEach(function (ability) {
+                        return ability.currentCooldown(0);
+                    });
                     _this.modals.nextLevel(function () {
                         return restart.apply(self);
                     });
@@ -46,9 +49,13 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             } else if (mode == 0 /* Timed */) {
             }
 
-            var startingAbilities = [];
+            var startingAbilities = [
+                new ability.AbilityData(1 /* clearStack */, 1, 10),
+                new ability.AbilityData(2 /* freezeMatching */, 1, 30),
+                new ability.AbilityData(1 /* clearStack */, 1, 10)
+            ];
             for (var i = 0; i < State.abilitySlots(); i++) {
-                startingAbilities.push(new ability.AbilityData(1 /* clearStack */));
+                startingAbilities.push();
             }
             State.abilities(startingAbilities);
 
@@ -120,6 +127,8 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         State.abilities = ko.observableArray([]);
         State.abilitySlots = ko.observable(common.Configuration.baseAbilitySlots);
         State.maxHeldCrates = ko.observable(common.Configuration.baseMaxHeldCrates);
+
+        State.freezeMatching = false;
         return State;
     })();
     exports.State = State;

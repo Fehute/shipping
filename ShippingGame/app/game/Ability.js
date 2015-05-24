@@ -9,6 +9,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
     var Ability = (function (_super) {
         __extends(Ability, _super);
         function Ability(container, data) {
+            var _this = this;
             this.ability = $(Templates.ability);
             this.type = ko.computed(function () {
                 return data.type();
@@ -19,8 +20,21 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
             this.cooldown = ko.computed(function () {
                 return data.cooldown();
             });
+            this.currentCooldown = ko.observable(0);
             this.style = ko.observable(Ability.getStyle(this.type()));
             this.name = ko.observable(Ability.getName(this.type()));
+            this.effectLength = ko.computed(function () {
+                return data.effectLength();
+            });
+            this.effectCooldown = ko.observable(0);
+
+            this.onCooldown = ko.computed(function () {
+                return _this.currentCooldown() > 0;
+            });
+            this.getLabel = ko.computed(function () {
+                return _this.name() + (_this.currentCooldown() ? " (" + _this.currentCooldown() + "s)" : "");
+            });
+
             _super.call(this, container, this.ability);
             ko.applyBindings(this, this.ability[0]);
         }
@@ -41,9 +55,40 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
         };
 
         Ability.prototype.useAbility = function () {
-            if (this.type() == 1 /* clearStack */) {
-                game.State.targetingMode = 1 /* clearStack */;
+            var _this = this;
+            if (!this.onCooldown()) {
+                if (this.type() == 1 /* clearStack */) {
+                    game.State.targetingMode = 1 /* clearStack */;
+                } else if (this.type() == 2 /* freezeMatching */) {
+                    game.State.freezeMatching = true;
+                    this.setEffectDuration(function () {
+                        return game.State.freezeMatching = false;
+                    });
+                }
+
+                this.currentCooldown(this.cooldown());
+                this.cooldownTimer = setInterval(function () {
+                    _this.currentCooldown(_this.currentCooldown() - 1);
+                    if (_this.currentCooldown() <= 0) {
+                        _this.currentCooldown(0);
+                        clearInterval(_this.cooldownTimer);
+                    }
+                }, 1000);
             }
+        };
+
+        Ability.prototype.setEffectDuration = function (callback) {
+            var _this = this;
+            this.effectCooldown(this.effectLength());
+            this.effectTimer = setInterval(function () {
+                _this.effectCooldown(_this.effectCooldown() - 1);
+                if (_this.effectCooldown() <= 0) {
+                    _this.effectCooldown(0);
+                    callback();
+                    clearInterval(_this.effectTimer);
+                }
+                ;
+            }, 1000);
         };
 
         Ability.getStyle = function (ability) {
@@ -51,23 +96,25 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
         };
 
         Ability.getName = function (ability) {
-            return Ability.styles[ability];
+            return Ability.abilityNames[ability];
         };
         Ability.styles = ["empty", "clearStack"];
 
-        Ability.names = ["Empty", "clearStack"];
+        Ability.abilityNames = ["Empty", "Clear Stack", "Freeze Matching"];
         return Ability;
     })(common.BaseRepeatingModule);
     exports.Ability = Ability;
 
     var AbilityData = (function () {
-        function AbilityData(type, charges, cooldown) {
+        function AbilityData(type, charges, cooldown, effectLength) {
             if (typeof type === "undefined") { type = 0 /* empty */; }
             if (typeof charges === "undefined") { charges = 0; }
-            if (typeof cooldown === "undefined") { cooldown = 0; }
+            if (typeof cooldown === "undefined") { cooldown = 10; }
+            if (typeof effectLength === "undefined") { effectLength = 10; }
             this.type = ko.observable(type);
             this.charges = ko.observable(charges);
             this.cooldown = ko.observable(cooldown);
+            this.effectLength = ko.observable(effectLength);
         }
         return AbilityData;
     })();
@@ -76,6 +123,7 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
     (function (AbilityType) {
         AbilityType[AbilityType["empty"] = 0] = "empty";
         AbilityType[AbilityType["clearStack"] = 1] = "clearStack";
+        AbilityType[AbilityType["freezeMatching"] = 2] = "freezeMatching";
     })(exports.AbilityType || (exports.AbilityType = {}));
     var AbilityType = exports.AbilityType;
 

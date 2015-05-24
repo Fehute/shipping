@@ -27,7 +27,6 @@ var el = $('#content')[0];
 var greeter = new App(el);
 
 //todo abilities
-//cooldown
 //visual indicators
 //shop/acquisition
 

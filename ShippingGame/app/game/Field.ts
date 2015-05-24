@@ -101,6 +101,8 @@ export class Field extends common.BaseModule {
         //make array of these arrays (now we have the grid)
         //search for one color at a time. 
 
+        if (game.State.freezeMatching) return;
+
         //stack x crate array of CrateData
         var field: game.CrateData[][] = this.stacks().map((val) => val.getContents());
 
