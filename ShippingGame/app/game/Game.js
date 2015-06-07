@@ -49,10 +49,12 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             } else if (mode == 0 /* Timed */) {
             }
 
+            State.specialCrates.push(CrateType.rock);
             var startingAbilities = [
-                new ability.AbilityData(1 /* clearStack */, 1, 10),
-                new ability.AbilityData(2 /* freezeMatching */, 1, 30),
-                new ability.AbilityData(1 /* clearStack */, 1, 10)
+                new ability.AbilityData(4 /* matchRocks */, 3, 30, 10),
+                new ability.AbilityData(1 /* clearStack */, 10, 0, 5),
+                new ability.AbilityData(2 /* freezeMatching */, 1, 10, 30),
+                new ability.AbilityData(3 /* duplicate */, 1, 10)
             ];
             for (var i = 0; i < State.abilitySlots(); i++) {
                 startingAbilities.push();
@@ -129,6 +131,8 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         State.maxHeldCrates = ko.observable(common.Configuration.baseMaxHeldCrates);
 
         State.freezeMatching = false;
+        State.duplicateCrates = false;
+        State.matchRocks = false;
         return State;
     })();
     exports.State = State;
@@ -180,14 +184,25 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         CrateType.prototype.matches = function (c) {
             var matches = true;
 
-            //don't match rocks
-            matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+            //don't match rocks unless you have the ability
+            if (!State.matchRocks) {
+                matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+            }
 
             //match types
             matches = matches && this.type == c.type;
 
-            //always match rainbows, even with rocks
+            //always match rainbows, even with rocks ('Match Rocks' treats rocks as rainbows, too)
             matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow;
+            if (State.matchRocks) {
+                matches = matches || c.special == CrateType.rock || this.special == CrateType.rock;
+            }
+
+            if (matches || this.special == CrateType.rock || c.special == CrateType.rock) {
+                console.log("matching: ", this.type, this.special);
+                console.log("with: ", c.type, c.special);
+            }
+
             return matches;
         };
         CrateType.special = -1;

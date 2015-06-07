@@ -47,10 +47,12 @@ export class Game extends common.BaseModule {
 
         }
 
+        State.specialCrates.push(CrateType.rock);
         var startingAbilities = [
-            new ability.AbilityData(ability.AbilityType.clearStack, 1, 10),
-            new ability.AbilityData(ability.AbilityType.freezeMatching, 1, 30),
-            new ability.AbilityData(ability.AbilityType.clearStack, 1, 10)
+            new ability.AbilityData(ability.AbilityType.matchRocks, 3, 30, 10),
+            new ability.AbilityData(ability.AbilityType.clearStack, 10, 0, 5),
+            new ability.AbilityData(ability.AbilityType.freezeMatching, 1, 10, 30),
+            new ability.AbilityData(ability.AbilityType.duplicate, 1, 10)
         ];
         for (var i = 0; i < State.abilitySlots(); i++) {
             startingAbilities.push();
@@ -125,6 +127,8 @@ export class State {
     static maxHeldCrates: KnockoutObservable<number> = ko.observable(common.Configuration.baseMaxHeldCrates);
     static targetingMode: common.TargetingModes;
     static freezeMatching: boolean = false;
+    static duplicateCrates: boolean = false;
+    static matchRocks: boolean = false;
 }
 
 export interface CrateData {
@@ -233,16 +237,26 @@ export class CrateType {
     matches(c: CrateType): Boolean {
         var matches = true;
 
-        //don't match rocks
-        matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+        //don't match rocks unless you have the ability
+        if (!State.matchRocks) {
+            matches = (this.special != CrateType.rock) && (c.special != CrateType.rock);
+        }
 
         //match types
         matches = matches && this.type == c.type;
 
-        //always match rainbows, even with rocks
-        matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow
+        //always match rainbows, even with rocks ('Match Rocks' treats rocks as rainbows, too)
+        matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow;
+        if (State.matchRocks) {
+            matches = matches || c.special == CrateType.rock || this.special == CrateType.rock;
+        }
+
+        if (matches || this.special == CrateType.rock || c.special == CrateType.rock) {
+            console.log("matching: ", this.type, this.special);
+            console.log("with: ", c.type, c.special);
+        }
+
         return matches;
-            
     }
 
     constructor(public type: number, public special: number = 0) { }

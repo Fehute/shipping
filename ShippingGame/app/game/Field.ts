@@ -106,7 +106,6 @@ export class Field extends common.BaseModule {
         //stack x crate array of CrateData
         var field: game.CrateData[][] = this.stacks().map((val) => val.getContents());
 
-        var hitEnd = false;
         var crate: game.CrateData;
         var type: game.CrateType;
         var count: number = 0;
@@ -117,7 +116,7 @@ export class Field extends common.BaseModule {
             for (var y = 0; y < field[x].length; y++) {
                 //travel down our stack
                 crate = field[x][y];
-                if (!crate.checked && crate.type.special != game.CrateType.rainbow) { //new crate
+                if (!crate.checked && crate.type.special != game.CrateType.rainbow && (!game.State.matchRocks || (crate.type.special != game.CrateType.rock))) { //new crate
                     //begin checking for a new set
                     crate.checked = true;
                     type = crate.type;
@@ -129,7 +128,7 @@ export class Field extends common.BaseModule {
                         if ((x >= 0 && x < field.length) && (y >= 0 && y < field[x].length)) {
                             crate2 = field[x][y];
                             if (!crate2.checked && (crate2.type.matches(crate.type))) {
-                                crate2.checked = true;
+                                crate2.checked = crate2.type.special != game.CrateType.rainbow && (!game.State.matchRocks || (crate2.type.special != game.CrateType.rock));
                                 crate2.matchNumber = matchNumber;
                                 count++;
 

@@ -75,7 +75,9 @@ export class Stack extends common.BaseRepeatingModule {
 
     release() {
         if (game.State.crates().length) {
-            this.crates.push(new crate.Crate(this.crateContainer, game.State.crates.pop()));
+            var newCrateData = game.State.crates.pop();
+            this.crates.push(new crate.Crate(this.crateContainer, newCrateData));
+            if (game.State.duplicateCrates) this.crates.push(new crate.Crate(this.crateContainer, newCrateData));
             field.Field.cratePlaced();
             field.Field.crateTouched();
         }

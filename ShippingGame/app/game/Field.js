@@ -116,7 +116,6 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                 return val.getContents();
             });
 
-            var hitEnd = false;
             var crate;
             var type;
             var count = 0;
@@ -126,7 +125,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                 for (var y = 0; y < field[x].length; y++) {
                     //travel down our stack
                     crate = field[x][y];
-                    if (!crate.checked && crate.type.special != game.CrateType.rainbow) {
+                    if (!crate.checked && crate.type.special != game.CrateType.rainbow && (!game.State.matchRocks || (crate.type.special != game.CrateType.rock))) {
                         //begin checking for a new set
                         crate.checked = true;
                         type = crate.type;
@@ -138,7 +137,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                             if ((x >= 0 && x < field.length) && (y >= 0 && y < field[x].length)) {
                                 crate2 = field[x][y];
                                 if (!crate2.checked && (crate2.type.matches(crate.type))) {
-                                    crate2.checked = true;
+                                    crate2.checked = crate2.type.special != game.CrateType.rainbow && (!game.State.matchRocks || (crate2.type.special != game.CrateType.rock));
                                     crate2.matchNumber = matchNumber;
                                     count++;
 

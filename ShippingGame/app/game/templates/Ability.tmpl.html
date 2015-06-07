@@ -1,3 +1,5 @@
 ﻿<div class="abilitySlot">
-    <button class="abilityButton" data-bind="click: useAbility, text: getLabel, visible: style!='empty', disable: onCooldown">Pause</button>
+    <span class="charges" data-bind="text: '[' + charges() + ']'"></span>
+    <button class="abilityButton" data-bind="click: useAbility, text: getLabel, visible: style!='empty', disable: onCooldown"></button>
+    <span class="duration" data-bind="text: getDurationLabel, visible: effectCooldown() > 0"></span>
 </div>

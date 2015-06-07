@@ -7,7 +7,8 @@ import game = require('game/Game');
 export class Ability extends common.BaseRepeatingModule {
     ability: JQuery;
     type: KnockoutComputed<AbilityType>;
-    charges: KnockoutComputed<number>;
+    charges: KnockoutObservable<number>;
+    baseCharges: KnockoutComputed<number>;
     cooldown: KnockoutComputed<number>;
     currentCooldown: KnockoutObservable<number>;
     style: KnockoutObservable<string>;
@@ -15,23 +16,29 @@ export class Ability extends common.BaseRepeatingModule {
     onCooldown: KnockoutComputed<boolean>;
     cooldownTimer: any;
     getLabel: KnockoutComputed<string>;
+    getDurationLabel: KnockoutComputed<string>;
     effectTimer: any;
     effectLength: KnockoutObservable<number>;
     effectCooldown: KnockoutObservable<number>;
 
+    static styles = ["empty", "clearStack", "freezeMatching", "duplicate", "matchRocks", "matchThree", "boardReset", "freezeSpawning"];
+    static abilityNames = ["Empty", "Clear Stack", "Freeze Matching", "Duplicate", "Match Rocks", "matchThree", "Board Reset", "Freeze Spawns"];
+
     constructor(container: JQuery, data: AbilityData) {
         this.ability = $(Templates.ability);
         this.type = ko.computed(() => data.type());
-        this.charges = ko.computed(() => data.charges());
-        this.cooldown = ko.computed(() => data.cooldown());
-        this.currentCooldown = ko.observable(0);
+        this.charges = ko.observable(data.baseCharges());
+        this.baseCharges = ko.computed(() => data.baseCharges());
+        this.cooldown = ko.computed(() => data.cooldown()); // total time between usages
+        this.currentCooldown = ko.observable(0); // current ticking time until ability is usable
         this.style = ko.observable(Ability.getStyle(this.type()));
         this.name = ko.observable(Ability.getName(this.type()));
-        this.effectLength = ko.computed(() => data.effectLength());
-        this.effectCooldown = ko.observable(0);
+        this.effectLength = ko.computed(() => data.effectLength()); // duration that ability effect lasts
+        this.effectCooldown = ko.observable(0); // current ticking time that the ability is in effect
 
         this.onCooldown = ko.computed(() => this.currentCooldown() > 0);
         this.getLabel = ko.computed(() => this.name() + (this.currentCooldown() ? " (" + this.currentCooldown() + "s)" : ""));
+        this.getDurationLabel = ko.computed(() => "T: " + this.effectCooldown());
 
         super(container, this.ability);
         ko.applyBindings(this, this.ability[0]);
@@ -39,7 +46,7 @@ export class Ability extends common.BaseRepeatingModule {
 
     setData(data: AbilityData) {
         this.type = ko.computed(() => data.type());
-        this.charges = ko.computed(() => data.charges());
+        this.baseCharges = ko.computed(() => data.baseCharges());
         this.cooldown = ko.computed(() => data.cooldown());
     }
 
@@ -49,22 +56,38 @@ export class Ability extends common.BaseRepeatingModule {
 
     useAbility() {
         if (!this.onCooldown()) {
-            if (this.type() == AbilityType.clearStack) {
-                game.State.targetingMode = common.TargetingModes.clearStack;
-            } else if (this.type() == AbilityType.freezeMatching) {
-                game.State.freezeMatching = true;
-                this.setEffectDuration(() => game.State.freezeMatching = false);
-            }
+            if (this.baseCharges() > 0 && this.charges() > 0) {
+                this.charges(this.charges() - 1);
 
-            this.currentCooldown(this.cooldown());
-            this.cooldownTimer = setInterval(() => {
-                this.currentCooldown(this.currentCooldown() - 1);
-                if (this.currentCooldown() <= 0) {
-                    this.currentCooldown(0);
-                    clearInterval(this.cooldownTimer);
+                if (this.type() == AbilityType.clearStack) {
+                    game.State.targetingMode = common.TargetingModes.clearStack;
+                } else if (this.type() == AbilityType.freezeMatching) {
+                    game.State.freezeMatching = true;
+                    this.setEffectDuration(() => {
+                        game.State.freezeMatching = false;
+                        game.State.game.board.field.checkForMatch();
+                    });
+                } else if (this.type() == AbilityType.duplicate) {
+                    game.State.duplicateCrates = true;
+                    this.setEffectDuration(() => {
+                        game.State.duplicateCrates = false;
+                    });
+                } else if (this.type() == AbilityType.matchRocks) {
+                    game.State.matchRocks = true;
+                    this.setEffectDuration(() => {
+                        game.State.matchRocks = false;
+                    });
                 }
-            }, 1000);
 
+                this.currentCooldown(this.cooldown());
+                this.cooldownTimer = setInterval(() => {
+                    this.currentCooldown(this.currentCooldown() - 1);
+                    if (this.currentCooldown() <= 0) {
+                        this.currentCooldown(0);
+                        clearInterval(this.cooldownTimer);
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -80,11 +103,10 @@ export class Ability extends common.BaseRepeatingModule {
         }, 1000);
     }
 
-    static styles = ["empty", "clearStack"];
     static getStyle(ability: AbilityType): string {
         return Ability.styles[ability];
     }
-    static abilityNames = ["Empty", "Clear Stack", "Freeze Matching"];
+    
     static getName(ability: AbilityType): string {
         return Ability.abilityNames[ability];
     }
@@ -92,13 +114,13 @@ export class Ability extends common.BaseRepeatingModule {
 
 export class AbilityData {
     type: KnockoutObservable<AbilityType>;
-    charges: KnockoutObservable<number>;
+    baseCharges: KnockoutObservable<number>;
     cooldown: KnockoutObservable<number>;
     effectLength: KnockoutObservable<number>;
 
-    constructor(type = AbilityType.empty, charges: number = 0, cooldown: number = 10, effectLength: number = 10) {
+    constructor(type = AbilityType.empty, baseCharges: number = 0, effectLength: number = 10, cooldown: number = 10) {
         this.type = ko.observable(type);
-        this.charges = ko.observable(charges);
+        this.baseCharges = ko.observable(baseCharges);
         this.cooldown = ko.observable(cooldown);
         this.effectLength = ko.observable(effectLength);
     }
@@ -107,7 +129,12 @@ export class AbilityData {
 export enum AbilityType {
     empty,
     clearStack,
-    freezeMatching
+    freezeMatching,
+    duplicate,
+    matchRocks,
+    matchThree,
+    boardReset,
+    freezeSpawning
 }
 
 module Templates {
