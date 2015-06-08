@@ -77,6 +77,12 @@ export class Ability extends common.BaseRepeatingModule {
                     this.setEffectDuration(() => {
                         game.State.matchRocks = false;
                     });
+                } else if (this.type() == AbilityType.matchThree) {
+                    game.State.matchAmountAdjustment = -1;
+                    game.State.game.board.field.checkForMatch();
+                    this.setEffectDuration(() => {
+                        game.State.matchAmountAdjustment = 0;
+                    });
                 }
 
                 this.currentCooldown(this.cooldown());

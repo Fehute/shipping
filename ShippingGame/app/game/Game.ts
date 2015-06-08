@@ -49,6 +49,7 @@ export class Game extends common.BaseModule {
 
         State.specialCrates.push(CrateType.rock);
         var startingAbilities = [
+            new ability.AbilityData(ability.AbilityType.matchThree, 3, 30, 10),
             new ability.AbilityData(ability.AbilityType.matchRocks, 3, 30, 10),
             new ability.AbilityData(ability.AbilityType.clearStack, 10, 0, 5),
             new ability.AbilityData(ability.AbilityType.freezeMatching, 1, 10, 30),
@@ -129,6 +130,7 @@ export class State {
     static freezeMatching: boolean = false;
     static duplicateCrates: boolean = false;
     static matchRocks: boolean = false;
+    static matchAmountAdjustment: number = 0;
 }
 
 export interface CrateData {
@@ -249,11 +251,6 @@ export class CrateType {
         matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow;
         if (State.matchRocks) {
             matches = matches || c.special == CrateType.rock || this.special == CrateType.rock;
-        }
-
-        if (matches || this.special == CrateType.rock || c.special == CrateType.rock) {
-            console.log("matching: ", this.type, this.special);
-            console.log("with: ", c.type, c.special);
         }
 
         return matches;

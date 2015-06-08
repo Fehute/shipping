@@ -82,6 +82,12 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
                         this.setEffectDuration(function () {
                             game.State.matchRocks = false;
                         });
+                    } else if (this.type() == 5 /* matchThree */) {
+                        game.State.matchAmountAdjustment = -1;
+                        game.State.game.board.field.checkForMatch();
+                        this.setEffectDuration(function () {
+                            game.State.matchAmountAdjustment = 0;
+                        });
                     }
 
                     this.currentCooldown(this.cooldown());

@@ -51,6 +51,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
 
             State.specialCrates.push(CrateType.rock);
             var startingAbilities = [
+                new ability.AbilityData(5 /* matchThree */, 3, 30, 10),
                 new ability.AbilityData(4 /* matchRocks */, 3, 30, 10),
                 new ability.AbilityData(1 /* clearStack */, 10, 0, 5),
                 new ability.AbilityData(2 /* freezeMatching */, 1, 10, 30),
@@ -133,6 +134,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         State.freezeMatching = false;
         State.duplicateCrates = false;
         State.matchRocks = false;
+        State.matchAmountAdjustment = 0;
         return State;
     })();
     exports.State = State;
@@ -196,11 +198,6 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
             matches = matches || c.special == CrateType.rainbow || this.special == CrateType.rainbow;
             if (State.matchRocks) {
                 matches = matches || c.special == CrateType.rock || this.special == CrateType.rock;
-            }
-
-            if (matches || this.special == CrateType.rock || c.special == CrateType.rock) {
-                console.log("matching: ", this.type, this.special);
-                console.log("with: ", c.type, c.special);
             }
 
             return matches;

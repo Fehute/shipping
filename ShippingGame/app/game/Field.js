@@ -172,7 +172,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
             //turn the field into sets of crate indicies that were successfully matched
             var matchResults = field.map(function (stack) {
                 return stack.map(function (c, i) {
-                    return c.count >= common.Configuration.matchAmount ? i : -1;
+                    return c.count >= (common.Configuration.matchAmount + game.State.matchAmountAdjustment) ? i : -1;
                 }).filter(function (val) {
                     return val != -1;
                 });
@@ -193,7 +193,7 @@ define(["require", "exports", 'common', 'game/Stack', 'knockout', 'game/Game', "
                 return p.concat(c);
             }, []);
             crates = crates.filter(function (c) {
-                return c.count >= common.Configuration.matchAmount;
+                return c.count >= (common.Configuration.matchAmount + game.State.matchAmountAdjustment);
             });
             crates = crates.reduce(function (p, c) {
                 if (!p.some(function (o) {

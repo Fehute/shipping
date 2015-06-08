@@ -160,7 +160,7 @@ export class Field extends common.BaseModule {
         
 
         //turn the field into sets of crate indicies that were successfully matched
-        var matchResults: number[][] = field.map((stack) => stack.map((c, i) => c.count >= common.Configuration.matchAmount ? i : -1).filter((val) => val != -1));
+        var matchResults: number[][] = field.map((stack) => stack.map((c, i) => c.count >= (common.Configuration.matchAmount + game.State.matchAmountAdjustment) ? i : -1).filter((val) => val != -1));
 
         //now tell each stack
         this.stacks().forEach((stack, i) => stack.matchCrates(matchResults[i]));
@@ -173,7 +173,7 @@ export class Field extends common.BaseModule {
          * Reduce to the highest count per matchId
          */
         var crates = field.reduce((p: game.CrateData[], c: game.CrateData[]) => { return p.concat(c) }, []);
-        crates = crates.filter((c) => c.count >= common.Configuration.matchAmount);
+        crates = crates.filter((c) => c.count >= (common.Configuration.matchAmount + game.State.matchAmountAdjustment));
         crates = crates.reduce((p: game.CrateData[], c: game.CrateData) => { if (!p.some((o) => o.matchNumber == c.matchNumber)) { return p.concat(c) } return p }, []).filter((c) => c != null);
         var score = common.Configuration.getPoints(crates.map((c): common.Match => c));
         game.State.score(game.State.score() + score);

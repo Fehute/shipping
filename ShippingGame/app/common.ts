@@ -68,7 +68,7 @@ export class Configuration {
         var points = 0;
 
         matches.forEach((m) => {
-            points += (((m.count - Configuration.matchAmount + 1) * (m.count * crateValue)) * chainValue) * game.State.intensity();
+            points += (((m.count - (Configuration.matchAmount + game.State.matchAmountAdjustment) + 1) * (m.count * crateValue)) * chainValue) * game.State.intensity();
         });
 
         return points;
