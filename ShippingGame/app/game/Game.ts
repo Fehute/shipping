@@ -126,7 +126,7 @@ export class State {
     static abilities: KnockoutObservableArray<ability.AbilityData> = ko.observableArray([]);
     static abilitySlots: KnockoutObservable<number> = ko.observable(common.Configuration.baseAbilitySlots);
     static maxHeldCrates: KnockoutObservable<number> = ko.observable(common.Configuration.baseMaxHeldCrates);
-    static targetingMode: common.TargetingModes;
+    static targetingMode: common.TargetingModes = common.TargetingModes.normal;
     static freezeMatching: boolean = false;
     static duplicateCrates: boolean = false;
     static matchRocks: boolean = false;

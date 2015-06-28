@@ -11,18 +11,22 @@ export function applyTemplate(target: JQuery, data: any, template: string, bind?
 export function applyTemplate(target: HTMLElement, data: any, template: string, bind?: boolean, prepend?: boolean);
 export function applyTemplate(target: any, data: any, template: string, bind: boolean= true, prepend?: boolean) {
     var el;
+    var _template = $(template);
     if (prepend) {
-        el = $(target).prepend(template);
+        el = $(target).prepend(_template);
     } else {
-        el = $(target).append(template);
+        el = $(target).append(_template);
     }
     if (bind) {
         ko.applyBindings(data, el[0]);
     }
+
+    return _template;
 }
 
 export class BaseModule {
     self;
+    _template;
 
     constructor(public container: JQuery, public template:string) {
         this.self = this;
@@ -30,11 +34,14 @@ export class BaseModule {
     }
 
     render() {
-        applyTemplate(this.container, this, this.template);
+        this._template = applyTemplate(this.container, this, this.template);
     }
 }
 
+//does not auto ko bind
 export class BaseRepeatingModule {
+    _template;
+
     constructor(container: JQuery, template: JQuery, prepend?: boolean);
     constructor(container: JQuery, template: string, prepend?: boolean);
     constructor(public container: JQuery, public template: any, public prepend?: boolean) {
@@ -42,7 +49,7 @@ export class BaseRepeatingModule {
     }
 
     render() {
-        applyTemplate(this.container, this, this.template, false, this.prepend);
+        this._template = applyTemplate(this.container, this, this.template, false, this.prepend);
     }
 }
 
@@ -61,6 +68,7 @@ export class Configuration {
     static clickSpawnCount: number = 1;
     static baseChainValue: number = 0.5;
     static chainIncValue = (): number => 0.5;
+    static shopStock: number = 3;
     static getPoints = (matches: Match[]): number => {
         var crateValue = 1;
         game.State.chainValue += Configuration.chainIncValue();

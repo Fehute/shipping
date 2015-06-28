@@ -22,7 +22,7 @@ export class Ability extends common.BaseRepeatingModule {
     effectCooldown: KnockoutObservable<number>;
 
     static styles = ["empty", "clearStack", "freezeMatching", "duplicate", "matchRocks", "matchThree", "boardReset", "freezeSpawning"];
-    static abilityNames = ["Empty", "Clear Stack", "Freeze Matching", "Duplicate", "Match Rocks", "matchThree", "Board Reset", "Freeze Spawns"];
+    static abilityNames = ["Empty", "Clear Stack", "Freeze Matching", "Duplicate", "Match Rocks", "Match Three", "Board Reset", "Freeze Spawns"];
 
     constructor(container: JQuery, data: AbilityData) {
         this.ability = $(Templates.ability);
@@ -115,6 +115,16 @@ export class Ability extends common.BaseRepeatingModule {
     
     static getName(ability: AbilityType): string {
         return Ability.abilityNames[ability];
+    }
+
+    static getShoppable(): Array<AbilityType> {
+        return [
+            AbilityType.clearStack,
+            AbilityType.freezeMatching,
+            AbilityType.duplicate,
+            AbilityType.matchRocks,
+            AbilityType.matchThree
+        ];
     }
 }
 

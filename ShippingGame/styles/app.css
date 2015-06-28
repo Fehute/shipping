@@ -106,16 +106,17 @@
   text-align: center;
   z-index: 1; }
 .modalsContainer .popup {
-  width: 200px;
-  height: 100px;
+  min-width: 200px;
+  min-height: 100px;
   background-color: #f7f7f7;
   display: inline-block;
   top: 30%;
   position: relative; }
 .modalsContainer .message {
-  padding: 10px 0 20px; }
+  padding: 10px 20px 20px 20px; }
 .modalsContainer .buttons button {
-  width: 30%; }
+  width: 30%;
+  padding-bottom: 10px; }
 
 #dragPreview {
   display: none; }

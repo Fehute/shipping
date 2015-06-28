@@ -123,8 +123,18 @@ define(["require", "exports", 'common', 'knockout', 'game/Game', "text!game/temp
         Ability.getName = function (ability) {
             return Ability.abilityNames[ability];
         };
+
+        Ability.getShoppable = function () {
+            return [
+                1 /* clearStack */,
+                2 /* freezeMatching */,
+                3 /* duplicate */,
+                4 /* matchRocks */,
+                5 /* matchThree */
+            ];
+        };
         Ability.styles = ["empty", "clearStack", "freezeMatching", "duplicate", "matchRocks", "matchThree", "boardReset", "freezeSpawning"];
-        Ability.abilityNames = ["Empty", "Clear Stack", "Freeze Matching", "Duplicate", "Match Rocks", "matchThree", "Board Reset", "Freeze Spawns"];
+        Ability.abilityNames = ["Empty", "Clear Stack", "Freeze Matching", "Duplicate", "Match Rocks", "Match Three", "Board Reset", "Freeze Spawns"];
         return Ability;
     })(common.BaseRepeatingModule);
     exports.Ability = Ability;

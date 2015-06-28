@@ -130,7 +130,7 @@ define(["require", "exports", 'common', 'game/Board', 'knockout', 'game/Modals',
         State.abilities = ko.observableArray([]);
         State.abilitySlots = ko.observable(common.Configuration.baseAbilitySlots);
         State.maxHeldCrates = ko.observable(common.Configuration.baseMaxHeldCrates);
-
+        State.targetingMode = 0 /* normal */;
         State.freezeMatching = false;
         State.duplicateCrates = false;
         State.matchRocks = false;

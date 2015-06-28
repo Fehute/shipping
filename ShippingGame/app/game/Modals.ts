@@ -7,6 +7,7 @@ import common = require('common');
 import board = require('game/Board');
 import ko = require('knockout');
 import game = require('game/Game');
+import shop = require('game/Shop');
 
 export class Modals {
     modals: JQuery[] = [];
@@ -31,6 +32,11 @@ export class Modals {
         this.container.find('.closeModal').click(() => {
             modal.remove();
             onClose();
+        });
+
+        this.container.find('.openShop').click(() => {
+            this.shop(onClose);
+            modal.remove();
         });
     }
 
@@ -57,6 +63,20 @@ export class Modals {
             onClose();
         });
     }
+
+    shop(onClose: () => void) {
+        var modal = $(Templates.shop);
+        this.modals.push(modal);
+        this.container.append(modal);
+        var onShopClose = () => {
+            modal.remove();
+            onClose();
+        };
+
+        var shopContents = new shop.Shop(modal, onShopClose);
+
+        this.container.find('.closeModal').click(onShopClose);
+    }
 } 
 
 module Templates {
@@ -64,5 +84,5 @@ module Templates {
     export var nextLevel = <string>require('text!game/templates/modals/NextLevel.tmpl.html');
     export var gameType = <string>require('text!game/templates/modals/GameType.tmpl.html');
     export var paused = <string>require('text!game/templates/modals/Paused.tmpl.html');
-
+    export var shop = "<div class='shopContainer'></div>";
 }

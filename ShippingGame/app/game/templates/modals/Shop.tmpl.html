@@ -1,0 +1,15 @@
+﻿<div class="modal">
+    <div class="popup shop">
+        <div class="message">Shop for Abilities</div>
+        <div class="abilityChoices">
+            <!-- ko foreach: currentStock -->
+                <div class="shopItem" data-bind="click: function() {$parent.buyAbility($data)}, text: name">
+                    asdf
+                </div>
+            <!-- /ko -->
+        </div>
+        <div class="buttons">
+            <button class="closeModal">Exit Shop</button>
+        </div>
+    </div>
+</div>

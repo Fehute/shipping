@@ -27,6 +27,7 @@
     <Content Include="app\game\templates\modals\GameType.tmpl.html" />
     <Content Include="app\game\templates\modals\NextLevel.tmpl.html" />
     <Content Include="app\game\templates\modals\Paused.tmpl.html" />
+    <Content Include="app\game\templates\modals\Shop.tmpl.html" />
     <Content Include="app\game\templates\Stack.tmpl.html" />
     <Content Include="app\game\templates\Status.tmpl.html" />
     <Content Include="app\lib\jquery-1.11.1.min.js" />
@@ -56,6 +57,7 @@
     <TypeScriptCompile Include="app\game\Field.ts" />
     <TypeScriptCompile Include="app\game\Game.ts" />
     <TypeScriptCompile Include="app\game\Modals.ts" />
+    <TypeScriptCompile Include="app\game\Shop.ts" />
     <TypeScriptCompile Include="app\game\Stack.ts" />
     <TypeScriptCompile Include="app\game\Status.ts" />
     <TypeScriptCompile Include="app\Input.ts" />

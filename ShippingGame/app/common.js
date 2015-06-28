@@ -4,14 +4,17 @@
     function applyTemplate(target, data, template, bind, prepend) {
         if (typeof bind === "undefined") { bind = true; }
         var el;
+        var _template = $(template);
         if (prepend) {
-            el = $(target).prepend(template);
+            el = $(target).prepend(_template);
         } else {
-            el = $(target).append(template);
+            el = $(target).append(_template);
         }
         if (bind) {
             ko.applyBindings(data, el[0]);
         }
+
+        return _template;
     }
     exports.applyTemplate = applyTemplate;
 
@@ -23,12 +26,13 @@
             this.render();
         }
         BaseModule.prototype.render = function () {
-            exports.applyTemplate(this.container, this, this.template);
+            this._template = exports.applyTemplate(this.container, this, this.template);
         };
         return BaseModule;
     })();
     exports.BaseModule = BaseModule;
 
+    //does not auto ko bind
     var BaseRepeatingModule = (function () {
         function BaseRepeatingModule(container, template, prepend) {
             this.container = container;
@@ -37,7 +41,7 @@
             this.render();
         }
         BaseRepeatingModule.prototype.render = function () {
-            exports.applyTemplate(this.container, this, this.template, false, this.prepend);
+            this._template = exports.applyTemplate(this.container, this, this.template, false, this.prepend);
         };
         return BaseRepeatingModule;
     })();
@@ -72,6 +76,7 @@
         Configuration.chainIncValue = function () {
             return 0.5;
         };
+        Configuration.shopStock = 3;
         Configuration.getPoints = function (matches) {
             var crateValue = 1;
             game.State.chainValue += Configuration.chainIncValue();
